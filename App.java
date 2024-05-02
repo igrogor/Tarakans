@@ -1,10 +1,11 @@
-// Говнокод off
+// Говнокод ON
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.TextArea;
 import java.awt.TextComponent;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -17,11 +18,17 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+
 public class App extends JFrame {
     static JPanel ZOV;
     static Moskal SVO;
     MessageBox msgBox;
     MessageBox Error;
+    JLabel timer1;
+    int period = 1000;
+    TextField ZaycevNET;
+    int a = 1000;
+
     
     App() {
         setSize(2, 2);
@@ -34,11 +41,11 @@ public class App extends JFrame {
         ZOV.setBackground(new Color(201, 139, 91));
         ZOV.add(B);
         ZOV.add(E);
-        SVO = new Moskal();
-        JLabel timer1 = new JLabel(String.valueOf(SVO.habitat.timer));
+        SVO = new Moskal(this);
+        timer1 = new JLabel(String.valueOf(SVO.habitat.timer_1));
         timer1.setVisible(SVO.habitat.numTimer);
         
-//статистика по такраканам off -------------------------------------------------------
+//статистика по такраканам ON -------------------------------------------------------
         ButtonGroup group = new ButtonGroup();
         JRadioButton visibel, invisible;
         visibel = new JRadioButton("VISIBLE TIME");
@@ -60,10 +67,10 @@ public class App extends JFrame {
                 timer1.setVisible(SVO.habitat.numTimer);
             }
         });
-//on------------------------------------------------------------------------------------
+//OFF------------------------------------------------------------------------------------
     
 
-//menuBar off -------------------------------------------------------------------
+//menuBar ON -------------------------------------------------------------------
           JMenuBar mainMenu = new JMenuBar(); 
           JMenu fileMenu = new JMenu("main"); 
           JMenu helpMenu = new JMenu("Help"); 
@@ -97,7 +104,7 @@ public class App extends JFrame {
                  }
               }
           });
-//menuBar on ----------------------------------------------------------------
+//menuBar OFF ----------------------------------------------------------------
   
         fail();
 //start "Tarakan the game" -------------------------------------------------------------------
@@ -165,7 +172,23 @@ public class App extends JFrame {
                 msgBox.setVisible(!msgBox.isVisible());
             }   
         });
-// spawn off
+
+        
+// установка периода ON
+        ZaycevNET = new TextField();
+        ZaycevNET.setText("1000");
+        ZaycevNET.setColumns(10);
+        try {
+            a = Integer.parseInt(ZaycevNET.getText());
+        } catch(NumberFormatException e) {
+            ZaycevNET.setText("1000");
+             a = 1000;
+        }
+        ZOV.add(ZaycevNET);
+// установка периода OFF
+
+
+// spawn ON
         JComboBox spawnChanse = new JComboBox();
         spawnChanse.addItem("10%");
         spawnChanse.addItem("20%");
@@ -218,7 +241,7 @@ public class App extends JFrame {
                 }
             }
           });
-// spawn on          
+// spawn OFF          
 
         ZOV.add(lenta);
         ZOV.add(timer1, BorderLayout.EAST);
@@ -258,4 +281,4 @@ public class App extends JFrame {
     }
 }
 
-// Говнокод on
+// Говнокод OFF

@@ -26,9 +26,10 @@ public class Habitat   {
     boolean numTimer = false;
     int timer_1;
     int nuclearBomb = 9;
+    App chan;
 
-    Habitat() {
-
+    Habitat(App Si3Pio) {
+        chan = Si3Pio;
     }
     
     int setTarakan1() {
@@ -55,9 +56,11 @@ public class Habitat   {
                 Update(Ants1, Ants2); 
                 simulationTime++;
                 timer_1++;
+                chan.timer1.setText(String.valueOf(timer_1));
+                chan.a = Integer.parseInt(chan.ZaycevNET.getText());
             }
         }, 0, 1000);
-    }
+    }//------------------------------------------------------------------------------------------------------- A
         
         public void stopSimulation() {
         simulationRunning = false;
@@ -102,26 +105,28 @@ public class Habitat   {
         int x3 = Ants1.isEmpty() ? 0 : rand.nextInt(Ants1.size());
         int x5 = Ants2.isEmpty() ? 0 : rand.nextInt(Ants2.size());
         int x4 = rand.nextInt(2);
-
-        if (x1 > nuclearBomb) {
-            if(x4 == 1){
-                Ants1.add(new AntWarrior());
-                Tarakan_1++;
-            }else{
-                Ants2.add(new AntWorker());
-                Tarakan_2++;
-            }  
-        }
-        if (!Ants1.isEmpty() && x2 > 7) {
-            Ants1.remove(x3); 
-            Tarakan_1_Dead++;
-        }
-        if (!Ants2.isEmpty() && x6 > 7) {
-            Ants2.remove(x5); 
-            Tarakan_2_Dead++;
+//Безумие ON
+        if (timer_1 % (chan.a / 1000) == 0) {
+            if (x1 > nuclearBomb ) {
+                if (x4 == 1) {
+                    Ants1.add(new AntWarrior());
+                    Tarakan_1++;
+                } else {
+                    Ants2.add(new AntWorker());
+                    Tarakan_2++;
+                }
+            }
+            if (!Ants1.isEmpty() && x2 > 7) {
+                Ants1.remove(x3);
+                Tarakan_1_Dead++;
+            }
+            if (!Ants2.isEmpty() && x6 > 7) {
+                Ants2.remove(x5);
+                Tarakan_2_Dead++;
+            }
         }
     }
-    
+// Безумие OFF
     public void Static(int num){
 
          window = new String("Ants warriorscreated - " + Tarakan_1 + " Ants workers created - " + Tarakan_2 );

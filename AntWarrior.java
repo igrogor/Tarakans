@@ -16,7 +16,7 @@ public class AntWarrior extends Ant{
         x = rand.nextInt(800);
         y = rand.nextInt(800);
         try {
-            icon = ImageIO.read(new File("Tarakan_is_Photo_1.jpg"));
+            icon = ImageIO.read(new File("D:\\Lab\\Tarakans\\Tarakan_is_Photo_1.jpg"));
         } catch (IOException e) {
             icon = null;
         }

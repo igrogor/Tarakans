@@ -7,11 +7,15 @@ import java.awt.Image;
 import javax.swing.JPanel;
 
 public class Moskal extends JPanel {
-    Habitat habitat = new Habitat();
-    Image a;
+    // Habitat habitat = new Habitat();
+    Habitat habitat;
 
-    Moskal() {
+    Image a;
+    
+
+    Moskal(App R2D2) {
         setPreferredSize(new Dimension(800, 800));
+        habitat = new Habitat(R2D2);
     }
     
 
@@ -47,12 +51,6 @@ public class Moskal extends JPanel {
 
            
         }
-        // if (habitat.numTimer) {
-        //         g2.setColor(Color.green);
-        //         setFont(new Font("Papyrus", Font.ITALIC, 80));
-        //         g2.drawString(String.valueOf(habitat.timer_1), 400, 400);
-                
-        // }
         g.drawImage(a, 0, 0, null);
     }
 }
