@@ -25,34 +25,40 @@ class MessageBox extends JDialog {
     
     public Object textArea;
 
-    public MessageBox(String m, JFrame p, String t, boolean modal, App parent)   {
+    public MessageBox(String m, JFrame p, String t, boolean modal, App parent, boolean typeMessage)   {
         setSize(400, 200);
         JPanel VilkaLojka = new JPanel(new GridLayout(1, 2));
-
         setLayout(new BorderLayout());
 
-        add(parent.getText1());
 
-        JButton exit = new JButton("exit");
-        JButton ok = new JButton("ok");
-        VilkaLojka.add(ok);
-        VilkaLojka.add(exit);
-        add(VilkaLojka, BorderLayout.SOUTH);
-        setVisible(true);
+        if (typeMessage == true) {
+            add(parent.getText1());
 
-        ok.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                App.SVO.habitat.stopSimulation();//--------------------------остановиля на реализации окошка с статитстикой и кнопками
-                setVisible(false);
+            JButton exit = new JButton("exit");
+            JButton ok = new JButton("ok");
+            VilkaLojka.add(ok);
+            VilkaLojka.add(exit);
+            add(VilkaLojka, BorderLayout.SOUTH);
+            setVisible(true);
+    
+            ok.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    App.SVO.habitat.stopSimulation();//--------------------------остановиля на реализации окошка с статитстикой и кнопками
+                    setVisible(false);
+                }
+            });
+    
+            exit.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    App.SVO.habitat.toggleSimulation();
+                    setVisible(false);
+                }
+            });
+        }else{
+            add(parent.getText2());
+            setVisible(true);
+        }
 
-            }
-        });
-        exit.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                App.SVO.habitat.toggleSimulation();
-                setVisible(false);
-            }
-        });
      }
  }
  

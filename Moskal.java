@@ -47,12 +47,12 @@ public class Moskal extends JPanel {
 
            
         }
-        if (habitat.numTimer) {
-                g2.setColor(Color.green);
-                setFont(new Font("Papyrus", Font.ITALIC, 80));
-                g2.drawString(String.valueOf(habitat.timer_1), 400, 400);
+        // if (habitat.numTimer) {
+        //         g2.setColor(Color.green);
+        //         setFont(new Font("Papyrus", Font.ITALIC, 80));
+        //         g2.drawString(String.valueOf(habitat.timer_1), 400, 400);
                 
-        }
+        // }
         g.drawImage(a, 0, 0, null);
     }
 }

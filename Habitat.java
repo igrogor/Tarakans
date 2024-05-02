@@ -25,6 +25,7 @@ public class Habitat   {
     boolean num = false;
     boolean numTimer = false;
     int timer_1;
+    int nuclearBomb = 9;
 
     Habitat() {
 
@@ -102,7 +103,7 @@ public class Habitat   {
         int x5 = Ants2.isEmpty() ? 0 : rand.nextInt(Ants2.size());
         int x4 = rand.nextInt(2);
 
-        if (x1 > 3) {
+        if (x1 > nuclearBomb) {
             if(x4 == 1){
                 Ants1.add(new AntWarrior());
                 Tarakan_1++;
