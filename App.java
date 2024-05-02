@@ -75,7 +75,7 @@ public class App extends JFrame {
           JMenu fileMenu = new JMenu("main"); 
           JMenu helpMenu = new JMenu("Help"); 
           
-  
+        //   fail();
        
           fileMenu.add(new JMenuItem("start")); 
           fileMenu.addSeparator();  	
@@ -106,7 +106,7 @@ public class App extends JFrame {
           });
 //menuBar OFF ----------------------------------------------------------------
   
-        fail();
+        // fail();
 //start "Tarakan the game" -------------------------------------------------------------------
         B.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -180,9 +180,10 @@ public class App extends JFrame {
         ZaycevNET.setColumns(10);
         try {
             a = Integer.parseInt(ZaycevNET.getText());
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
+            fail();
             ZaycevNET.setText("1000");
-             a = 1000;
+            a = 1000;
         }
         ZOV.add(ZaycevNET);
 // установка периода OFF

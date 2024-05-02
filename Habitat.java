@@ -57,7 +57,13 @@ public class Habitat   {
                 simulationTime++;
                 timer_1++;
                 chan.timer1.setText(String.valueOf(timer_1));
-                chan.a = Integer.parseInt(chan.ZaycevNET.getText());
+                try {
+                    chan.a = Integer.parseInt(chan.ZaycevNET.getText());
+                } catch (NumberFormatException e) {
+                    chan.fail();
+                    chan.ZaycevNET.setText("1000");
+                    chan.a = 1000;
+                }
             }
         }, 0, 1000);
     }//------------------------------------------------------------------------------------------------------- A
