@@ -28,6 +28,7 @@ class MessageBox extends JDialog {
     public MessageBox(String m, JFrame p, String t, boolean modal, App parent, boolean typeMessage)   {
         setSize(400, 200);
         JPanel VilkaLojka = new JPanel(new GridLayout(1, 2));
+        
         setLayout(new BorderLayout());
 
 
@@ -38,13 +39,20 @@ class MessageBox extends JDialog {
             JButton ok = new JButton("ok");
             VilkaLojka.add(ok);
             VilkaLojka.add(exit);
+            exit.setFocusable(false);
+            ok.setFocusable(false);
+
             add(VilkaLojka, BorderLayout.SOUTH);
+            VilkaLojka.setFocusable(false);
+
             setVisible(true);
     
             ok.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     App.SVO.habitat.stopSimulation();//--------------------------остановиля на реализации окошка с статитстикой и кнопками
                     setVisible(false);
+                    parent.B.setEnabled(true);
+                    parent.E.setEnabled(false);
                 }
             });
     
@@ -56,8 +64,12 @@ class MessageBox extends JDialog {
             });
         }else{
             add(parent.getText2());
+            setFocusable(false);
+
             setVisible(true);
         }
+        setFocusable(false);
+
 
      }
  }
