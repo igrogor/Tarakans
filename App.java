@@ -31,6 +31,8 @@ public class App extends JFrame {
     int a = 1000;
     JButton B;
     JButton E;
+    JButton B_2;
+    JButton E_2;
     
     App() {
         setSize(2, 2);
@@ -235,14 +237,258 @@ public class App extends JFrame {
 ZOV.add(lenta);
 ZOV.add(timer1, BorderLayout.EAST);
 
-JComboBox spawnChanse_1 = spawnChanse;
-TextField ZaycevNET_1 = ZaycevNET;
-JCheckBox lenta_1 = lenta;
-ButtonGroup group_1 = group;
-JRadioButton visibel_1 = visibel;
-JRadioButton invisible_1 = invisible;
+//всякое для менюbar ON
+
+JComboBox spawnChanse_1 = new JComboBox();
+TextField ZaycevNET_1 = new TextField();
+JCheckBox lenta_1 = new JCheckBox();
+ButtonGroup group_1 = new ButtonGroup();
+JRadioButton visibel_1 = new JRadioButton();
+JRadioButton invisible_1 = new JRadioButton();
+
+spawnChanse_1.setFocusable(false);
+ZaycevNET_1.setFocusable(false);
+lenta_1.setFocusable(false);
+visibel_1.setFocusable(false);
+invisible_1.setFocusable(false);
+
+
+spawnChanse_1.addItem("10%");
+spawnChanse_1.addItem("20%");
+spawnChanse_1.addItem("30%");
+spawnChanse_1.addItem("40%");
+spawnChanse_1.addItem("50%");
+spawnChanse_1.addItem("60%");  
+spawnChanse_1.addItem("70%");
+spawnChanse_1.addItem("80%");
+spawnChanse_1.addItem("90%");
+spawnChanse_1.addItem("100%");           
+        // ZOV.add(spawnChanse_1);
+        spawnChanse_1.setFocusable(false);
+        spawnChanse_1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e )   {
+                switch (spawnChanse_1.getSelectedIndex()) {
+                    case 1:
+                        SVO.habitat.nuclearBomb = 9;
+                        break;
+                    case 2:
+                        SVO.habitat.nuclearBomb = 8;
+                        break;
+                    case 3:
+                        SVO.habitat.nuclearBomb = 7;
+                        break;
+                    case 4:
+                        SVO.habitat.nuclearBomb = 6;
+                        break;  
+                    case 5:
+                        SVO.habitat.nuclearBomb = 5;
+                        break;
+                    case 6:
+                        SVO.habitat.nuclearBomb = 4;
+                        break;
+                    case 7:
+                        SVO.habitat.nuclearBomb = 3;
+                        break;
+                    case 8:
+                        SVO.habitat.nuclearBomb = 2;
+                        break;   
+                    case 9:
+                        SVO.habitat.nuclearBomb = 1;
+                        break;    
+                    case 10:
+                        SVO.habitat.nuclearBomb = 0;
+                        break;                       
+                    default:
+                    SVO.habitat.nuclearBomb = 9;
+                        break;
+                }
+            }
+          });
+
+        ZaycevNET_1.setText("1000");
+        ZaycevNET_1.setColumns(10);
+        ZaycevNET_1.setFocusable(false);
+
+        try {
+            a = Integer.parseInt(ZaycevNET_1.getText());
+        } catch (NumberFormatException e) {
+            fail();
+            ZaycevNET_1.setText("1000");
+            a = 1000;
+        }
+
+
+        lenta_1.setFocusable(false);
+        lenta_1.addItemListener((ItemListener) new ItemListener() {
+            public void itemStateChanged(ItemEvent e )   {
+                msgBox.setVisible(!msgBox.isVisible());
+            }   
+        });
+
+        visibel_1 = new JRadioButton("VISIBLE TIME");
+        group.add(visibel_1);
+        // ZOV.add(visibel);
+        ZOV.setFocusable(false);
+        visibel.setFocusable(false);
+        
+        visibel_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SVO.habitat.numTimer = true;
+                timer1.setVisible(SVO.habitat.numTimer);
+            }
+        });
+
+        invisible_1 = new JRadioButton("INVISIBLE TIME");
+        group.add(invisible_1);
+        // ZOV.add(invisible_1);
+        invisible_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SVO.habitat.numTimer = false;
+                timer1.setVisible(SVO.habitat.numTimer);
+            }
+        });
+        timer1.setFocusable(false);
+        invisible_1.setFocusable(false);
+
+        //всякое для менюbar OFF
 
 //menuBar ON -------------------------------------------------------------------
+
+JComboBox spawnChanse_2 = new JComboBox();
+TextField ZaycevNET_2 = new TextField();
+JCheckBox lenta_2 = new JCheckBox();
+ButtonGroup group_2 = new ButtonGroup();
+JRadioButton visibel_2 = new JRadioButton();
+JRadioButton invisible_2 = new JRadioButton();
+B_2 = new JButton("START");
+E_2 = new JButton("STOP");
+
+spawnChanse_2.setFocusable(false);
+ZaycevNET_2.setFocusable(false);
+lenta_2.setFocusable(false);
+visibel_2.setFocusable(false);
+invisible_2.setFocusable(false);
+B_2.setFocusable(false);
+E_2.setFocusable(false);
+
+
+
+spawnChanse_2.addItem("10%");
+spawnChanse_2.addItem("20%");
+spawnChanse_2.addItem("30%");
+spawnChanse_2.addItem("40%");
+spawnChanse_2.addItem("50%");
+spawnChanse_2.addItem("60%");  
+spawnChanse_2.addItem("70%");
+spawnChanse_2.addItem("80%");
+spawnChanse_2.addItem("90%");
+spawnChanse_2.addItem("100%");           
+
+        spawnChanse_2.setFocusable(false);
+        spawnChanse_2.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e )   {
+                switch (spawnChanse_2.getSelectedIndex()) {
+                    case 1:
+                        SVO.habitat.nuclearBomb = 9;
+                        break;
+                    case 2:
+                        SVO.habitat.nuclearBomb = 8;
+                        break;
+                    case 3:
+                        SVO.habitat.nuclearBomb = 7;
+                        break;
+                    case 4:
+                        SVO.habitat.nuclearBomb = 6;
+                        break;  
+                    case 5:
+                        SVO.habitat.nuclearBomb = 5;
+                        break;
+                    case 6:
+                        SVO.habitat.nuclearBomb = 4;
+                        break;
+                    case 7:
+                        SVO.habitat.nuclearBomb = 3;
+                        break;
+                    case 8:
+                        SVO.habitat.nuclearBomb = 2;
+                        break;   
+                    case 9:
+                        SVO.habitat.nuclearBomb = 1;
+                        break;    
+                    case 10:
+                        SVO.habitat.nuclearBomb = 0;
+                        break;                       
+                    default:
+                    SVO.habitat.nuclearBomb = 9;
+                        break;
+                }
+            }
+          });
+
+          ZaycevNET_2.setText("1000");
+          ZaycevNET_2.setColumns(10);
+          ZaycevNET_2.setFocusable(false);
+
+        try {
+            a = Integer.parseInt(ZaycevNET_2.getText());
+        } catch (NumberFormatException e) {
+            fail();
+            ZaycevNET_2.setText("1000");
+            a = 1000;
+        }
+
+
+        lenta_2.setFocusable(false);
+        lenta_2.addItemListener((ItemListener) new ItemListener() {
+            public void itemStateChanged(ItemEvent e )   {
+                msgBox.setVisible(!msgBox.isVisible());
+            }   
+        });
+
+        visibel_2 = new JRadioButton("VISIBLE TIME");
+        group.add(visibel_2);
+        // ZOV.add(visibel);
+        ZOV.setFocusable(false);
+        visibel.setFocusable(false);
+        
+        visibel_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SVO.habitat.numTimer = true;
+                timer1.setVisible(SVO.habitat.numTimer);
+            }
+        });
+
+        invisible_2 = new JRadioButton("INVISIBLE TIME");
+        group.add(invisible_2);
+        // ZOV.add(invisible_1);
+        invisible_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SVO.habitat.numTimer = false;
+                timer1.setVisible(SVO.habitat.numTimer);
+            }
+        });
+        timer1.setFocusable(false);
+        invisible_2.setFocusable(false);
+
+        B_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SVO.habitat.toggleSimulation();
+                B_2.setEnabled(false);
+                E_2.setEnabled(true);
+            }
+        });
+
+        E_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SVO.habitat.stopSimulation();
+                newWindow();
+
+            }
+        });
+
+        
+
+        //всякое для менюbar OFF
 
 JMenuBar menubar = new JMenuBar();
 JMenu menu = new JMenu("menu");
@@ -267,6 +513,7 @@ itm.addActionListener(new ActionListener() {
     }
 });
 
+
 menubar.add(menu);
 menubar.add(spawnChanse_1);
 menubar.add(ZaycevNET_1);
@@ -281,16 +528,16 @@ setJMenuBar(menubar);
 
 
 //ToolBar ON
-// JToolBar tbCommon = new JToolBar();
-//         tbCommon.add(E);
-//         tbCommon.add(B);
-//         // tbCommon.addSeparator();
-//         tbCommon.add(spawnChanse);
-//         tbCommon.add(ZaycevNET);
-//         tbCommon.add(lenta);
-//         tbCommon.add(visibel);
-//         tbCommon.add(invisible);
-//         ZOV.add(tbCommon, BorderLayout.SOUTH);
+JToolBar tbCommon = new JToolBar();
+        tbCommon.add(B_2);
+        tbCommon.add(E_2);
+        // tbCommon.addSeparator();
+        tbCommon.add(spawnChanse_2);
+        tbCommon.add(ZaycevNET_2);
+        tbCommon.add(lenta_2);
+        tbCommon.add(visibel_2);
+        tbCommon.add(invisible_2);
+        ZOV.add(tbCommon, BorderLayout.WEST);
 //ToolBar OFF
 
 

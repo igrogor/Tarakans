@@ -53,6 +53,9 @@ class MessageBox extends JDialog {
                     setVisible(false);
                     parent.B.setEnabled(true);
                     parent.E.setEnabled(false);
+
+                    parent.B_2.setEnabled(true);
+                    parent.E_2.setEnabled(false);
                 }
             });
     
