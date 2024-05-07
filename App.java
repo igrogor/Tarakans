@@ -1,7 +1,9 @@
 // Говнокод ON
+
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.TextArea;
 import java.awt.TextComponent;
@@ -19,10 +21,9 @@ import javax.swing.event.ListSelectionListener;
 
 
 public class App extends JFrame {
-    static JPanel ZOV;
+    static JPanel MariaRa;
     static JPanel BAR;
-    static JPanel TOOL;
-    static Moskal SVO;
+    static Rivyera Magnit;
     MessageBox msgBox;
     MessageBox Error;
     JLabel timer1;
@@ -40,14 +41,15 @@ public class App extends JFrame {
         setLayout(new BorderLayout());
         
         B = new JButton("START");
+        B.setFont(new Font("Papyrus", Font.ITALIC, 40));
         E = new JButton("STOP");
-        ZOV = new JPanel();
-        ZOV.setBackground(new Color(201, 139, 91));
-        ZOV.add(B);
-        ZOV.add(E);
-        SVO = new Moskal(this);
-        timer1 = new JLabel(String.valueOf(SVO.habitat.timer_1));
-        timer1.setVisible(SVO.habitat.numTimer);
+        MariaRa = new JPanel();
+        MariaRa.setBackground(new Color(201, 139, 91));
+        MariaRa.add(B);
+        MariaRa.add(E);
+        Magnit = new Rivyera(this);
+        timer1 = new JLabel(String.valueOf(Magnit.habitat.timer_1));
+        timer1.setVisible(Magnit.habitat.numTimer);
         B.setFocusable(false);
         E.setFocusable(false);
 //статистика по такраканам ON -------------------------------------------------------
@@ -55,26 +57,26 @@ public class App extends JFrame {
         JRadioButton visibel, invisible;
         visibel = new JRadioButton("VISIBLE TIME");
         group.add(visibel);
-        ZOV.add(visibel);
-        ZOV.setFocusable(false);
+        MariaRa.add(visibel);
+        MariaRa.setFocusable(false);
         visibel.setFocusable(false);
         
 
 
         visibel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SVO.habitat.numTimer = true;
-                timer1.setVisible(SVO.habitat.numTimer);
+                Magnit.habitat.numTimer = true;
+                timer1.setVisible(Magnit.habitat.numTimer);
             }
         });
 
         invisible = new JRadioButton("INVISIBLE TIME");
         group.add(invisible);
-        ZOV.add(invisible);
+        MariaRa.add(invisible);
         invisible.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SVO.habitat.numTimer = false;
-                timer1.setVisible(SVO.habitat.numTimer);
+                Magnit.habitat.numTimer = false;
+                timer1.setVisible(Magnit.habitat.numTimer);
             }
         });
         timer1.setFocusable(false);
@@ -89,7 +91,7 @@ public class App extends JFrame {
 //start "Tarakan the game" -------------------------------------------------------------------
         B.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SVO.habitat.toggleSimulation();
+                Magnit.habitat.toggleSimulation();
                 B.setEnabled(false);
                 E.setEnabled(true);
             }
@@ -97,9 +99,9 @@ public class App extends JFrame {
 
         E.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SVO.habitat.stopSimulation();
+                Magnit.habitat.stopSimulation();
 //статистика по тараканам
-// ZOV.add(textArea);
+// MariaRa.add(textArea);
                 newWindow();
 
             }
@@ -108,18 +110,18 @@ public class App extends JFrame {
 //  stop "Tarakan the game" ------------------------------------------------------------------
 
 
-        ZOV.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 3, Color.BLACK));
+        MariaRa.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 3, Color.BLACK));
         
-        add(ZOV, BorderLayout.WEST);
-        add(SVO, BorderLayout.CENTER);
+        add(MariaRa, BorderLayout.WEST);
+        add(Magnit, BorderLayout.CENTER);
 
-        ZOV.setFocusable(false);
-        SVO.setFocusable(false);
+        MariaRa.setFocusable(false);
+        Magnit.setFocusable(false);
 
         Timer timer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SVO.repaint();
+                Magnit.repaint();
             }
         });
 
@@ -129,29 +131,29 @@ public class App extends JFrame {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_B) {
                     System.out.println("B");
-                    SVO.habitat.toggleSimulation();
+                    Magnit.habitat.toggleSimulation();
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_E) {
                     System.out.println("E");
-                    SVO.habitat.stopSimulation();
+                    Magnit.habitat.stopSimulation();
                     newWindow();
                     msgBox.setVisible(true);
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_T) {
                     System.out.println("T");
-                    SVO.habitat.numTimer = !SVO.habitat.numTimer;
-                    visibel.setSelected(SVO.habitat.numTimer);// --- ???????????????????????????????????????
-                    invisible.setSelected(!SVO.habitat.numTimer);//----??????????????????????????????
-                    timer1.setVisible(SVO.habitat.numTimer);
+                    Magnit.habitat.numTimer = !Magnit.habitat.numTimer;
+                    visibel.setSelected(Magnit.habitat.numTimer);// --- ???????????????????????????????????????
+                    invisible.setSelected(!Magnit.habitat.numTimer);//----??????????????????????????????
+                    timer1.setVisible(Magnit.habitat.numTimer);
 
 
                 }
             }
         });
 
-        JCheckBox lenta = new JCheckBox("statistick");
+        JCheckBox lenta = new JCheckBox("statistic");
         lenta.setFocusable(false);
 
         lenta.addItemListener((ItemListener) new ItemListener() {
@@ -165,7 +167,7 @@ public class App extends JFrame {
         ZaycevNET = new TextField();
         ZaycevNET.setText("1000");
         ZaycevNET.setColumns(10);
-        ZaycevNET.setFocusable(false);
+        ZaycevNET.setFocusable(true);
 
         try {
             a = Integer.parseInt(ZaycevNET.getText());
@@ -174,7 +176,7 @@ public class App extends JFrame {
             ZaycevNET.setText("1000");
             a = 1000;
         }
-        ZOV.add(ZaycevNET);
+        MariaRa.add(ZaycevNET);
 // установка периода OFF
 
 
@@ -190,52 +192,52 @@ public class App extends JFrame {
         spawnChanse.addItem("80%");
         spawnChanse.addItem("90%");
         spawnChanse.addItem("100%");           
-        ZOV.add(spawnChanse);
+        MariaRa.add(spawnChanse);
         spawnChanse.setFocusable(false);
 
         spawnChanse.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e )   {
                 switch (spawnChanse.getSelectedIndex()) {
                     case 1:
-                        SVO.habitat.nuclearBomb = 9;
+                        Magnit.habitat.nuclearBomb = 9;
                         break;
                     case 2:
-                        SVO.habitat.nuclearBomb = 8;
+                        Magnit.habitat.nuclearBomb = 8;
                         break;
                     case 3:
-                        SVO.habitat.nuclearBomb = 7;
+                        Magnit.habitat.nuclearBomb = 7;
                         break;
                     case 4:
-                        SVO.habitat.nuclearBomb = 6;
+                        Magnit.habitat.nuclearBomb = 6;
                         break;  
                     case 5:
-                        SVO.habitat.nuclearBomb = 5;
+                        Magnit.habitat.nuclearBomb = 5;
                         break;
                     case 6:
-                        SVO.habitat.nuclearBomb = 4;
+                        Magnit.habitat.nuclearBomb = 4;
                         break;
                     case 7:
-                        SVO.habitat.nuclearBomb = 3;
+                        Magnit.habitat.nuclearBomb = 3;
                         break;
                     case 8:
-                        SVO.habitat.nuclearBomb = 2;
+                        Magnit.habitat.nuclearBomb = 2;
                         break;   
                     case 9:
-                        SVO.habitat.nuclearBomb = 1;
+                        Magnit.habitat.nuclearBomb = 1;
                         break;    
                     case 10:
-                        SVO.habitat.nuclearBomb = 0;
+                        Magnit.habitat.nuclearBomb = 0;
                         break;                       
                     default:
-                    SVO.habitat.nuclearBomb = 9;
+                    Magnit.habitat.nuclearBomb = 9;
                         break;
                 }
             }
           });
 // spawn OFF        
 
-ZOV.add(lenta);
-ZOV.add(timer1, BorderLayout.EAST);
+MariaRa.add(lenta);
+MariaRa.add(timer1, BorderLayout.EAST);
 
 //всякое для менюbar ON
 
@@ -247,7 +249,7 @@ JRadioButton visibel_1 = new JRadioButton();
 JRadioButton invisible_1 = new JRadioButton();
 
 spawnChanse_1.setFocusable(false);
-ZaycevNET_1.setFocusable(false);
+ZaycevNET_1.setFocusable(true);
 lenta_1.setFocusable(false);
 visibel_1.setFocusable(false);
 invisible_1.setFocusable(false);
@@ -263,43 +265,43 @@ spawnChanse_1.addItem("70%");
 spawnChanse_1.addItem("80%");
 spawnChanse_1.addItem("90%");
 spawnChanse_1.addItem("100%");           
-        // ZOV.add(spawnChanse_1);
+        // MariaRa.add(spawnChanse_1);
         spawnChanse_1.setFocusable(false);
         spawnChanse_1.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e )   {
                 switch (spawnChanse_1.getSelectedIndex()) {
                     case 1:
-                        SVO.habitat.nuclearBomb = 9;
+                        Magnit.habitat.nuclearBomb = 9;
                         break;
                     case 2:
-                        SVO.habitat.nuclearBomb = 8;
+                        Magnit.habitat.nuclearBomb = 8;
                         break;
                     case 3:
-                        SVO.habitat.nuclearBomb = 7;
+                        Magnit.habitat.nuclearBomb = 7;
                         break;
                     case 4:
-                        SVO.habitat.nuclearBomb = 6;
+                        Magnit.habitat.nuclearBomb = 6;
                         break;  
                     case 5:
-                        SVO.habitat.nuclearBomb = 5;
+                        Magnit.habitat.nuclearBomb = 5;
                         break;
                     case 6:
-                        SVO.habitat.nuclearBomb = 4;
+                        Magnit.habitat.nuclearBomb = 4;
                         break;
                     case 7:
-                        SVO.habitat.nuclearBomb = 3;
+                        Magnit.habitat.nuclearBomb = 3;
                         break;
                     case 8:
-                        SVO.habitat.nuclearBomb = 2;
+                        Magnit.habitat.nuclearBomb = 2;
                         break;   
                     case 9:
-                        SVO.habitat.nuclearBomb = 1;
+                        Magnit.habitat.nuclearBomb = 1;
                         break;    
                     case 10:
-                        SVO.habitat.nuclearBomb = 0;
+                        Magnit.habitat.nuclearBomb = 0;
                         break;                       
                     default:
-                    SVO.habitat.nuclearBomb = 9;
+                    Magnit.habitat.nuclearBomb = 9;
                         break;
                 }
             }
@@ -311,6 +313,7 @@ spawnChanse_1.addItem("100%");
 
         try {
             a = Integer.parseInt(ZaycevNET_1.getText());
+            if (a < 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
             fail();
             ZaycevNET_1.setText("1000");
@@ -327,24 +330,24 @@ spawnChanse_1.addItem("100%");
 
         visibel_1 = new JRadioButton("VISIBLE TIME");
         group.add(visibel_1);
-        // ZOV.add(visibel);
-        ZOV.setFocusable(false);
+        // MariaRa.add(visibel);
+        MariaRa.setFocusable(false);
         visibel.setFocusable(false);
         
         visibel_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SVO.habitat.numTimer = true;
-                timer1.setVisible(SVO.habitat.numTimer);
+                Magnit.habitat.numTimer = true;
+                timer1.setVisible(Magnit.habitat.numTimer);
             }
         });
 
         invisible_1 = new JRadioButton("INVISIBLE TIME");
         group.add(invisible_1);
-        // ZOV.add(invisible_1);
+        // MariaRa.add(invisible_1);
         invisible_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SVO.habitat.numTimer = false;
-                timer1.setVisible(SVO.habitat.numTimer);
+                Magnit.habitat.numTimer = false;
+                timer1.setVisible(Magnit.habitat.numTimer);
             }
         });
         timer1.setFocusable(false);
@@ -364,7 +367,7 @@ B_2 = new JButton("START");
 E_2 = new JButton("STOP");
 
 spawnChanse_2.setFocusable(false);
-ZaycevNET_2.setFocusable(false);
+ZaycevNET_2.setFocusable(true);
 lenta_2.setFocusable(false);
 visibel_2.setFocusable(false);
 invisible_2.setFocusable(false);
@@ -389,37 +392,37 @@ spawnChanse_2.addItem("100%");
             public void itemStateChanged(ItemEvent e )   {
                 switch (spawnChanse_2.getSelectedIndex()) {
                     case 1:
-                        SVO.habitat.nuclearBomb = 9;
+                        Magnit.habitat.nuclearBomb = 9;
                         break;
                     case 2:
-                        SVO.habitat.nuclearBomb = 8;
+                        Magnit.habitat.nuclearBomb = 8;
                         break;
                     case 3:
-                        SVO.habitat.nuclearBomb = 7;
+                        Magnit.habitat.nuclearBomb = 7;
                         break;
                     case 4:
-                        SVO.habitat.nuclearBomb = 6;
+                        Magnit.habitat.nuclearBomb = 6;
                         break;  
                     case 5:
-                        SVO.habitat.nuclearBomb = 5;
+                        Magnit.habitat.nuclearBomb = 5;
                         break;
                     case 6:
-                        SVO.habitat.nuclearBomb = 4;
+                        Magnit.habitat.nuclearBomb = 4;
                         break;
                     case 7:
-                        SVO.habitat.nuclearBomb = 3;
+                        Magnit.habitat.nuclearBomb = 3;
                         break;
                     case 8:
-                        SVO.habitat.nuclearBomb = 2;
+                        Magnit.habitat.nuclearBomb = 2;
                         break;   
                     case 9:
-                        SVO.habitat.nuclearBomb = 1;
+                        Magnit.habitat.nuclearBomb = 1;
                         break;    
                     case 10:
-                        SVO.habitat.nuclearBomb = 0;
+                        Magnit.habitat.nuclearBomb = 0;
                         break;                       
                     default:
-                    SVO.habitat.nuclearBomb = 9;
+                    Magnit.habitat.nuclearBomb = 9;
                         break;
                 }
             }
@@ -447,24 +450,24 @@ spawnChanse_2.addItem("100%");
 
         visibel_2 = new JRadioButton("VISIBLE TIME");
         group.add(visibel_2);
-        // ZOV.add(visibel);
-        ZOV.setFocusable(false);
+        // MariaRa.add(visibel);
+        MariaRa.setFocusable(false);
         visibel.setFocusable(false);
         
         visibel_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SVO.habitat.numTimer = true;
-                timer1.setVisible(SVO.habitat.numTimer);
+                Magnit.habitat.numTimer = true;
+                timer1.setVisible(Magnit.habitat.numTimer);
             }
         });
 
         invisible_2 = new JRadioButton("INVISIBLE TIME");
         group.add(invisible_2);
-        // ZOV.add(invisible_1);
+        // MariaRa.add(invisible_1);
         invisible_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SVO.habitat.numTimer = false;
-                timer1.setVisible(SVO.habitat.numTimer);
+                Magnit.habitat.numTimer = false;
+                timer1.setVisible(Magnit.habitat.numTimer);
             }
         });
         timer1.setFocusable(false);
@@ -472,7 +475,7 @@ spawnChanse_2.addItem("100%");
 
         B_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SVO.habitat.toggleSimulation();
+                Magnit.habitat.toggleSimulation();
                 B_2.setEnabled(false);
                 E_2.setEnabled(true);
             }
@@ -480,7 +483,7 @@ spawnChanse_2.addItem("100%");
 
         E_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SVO.habitat.stopSimulation();
+                Magnit.habitat.stopSimulation();
                 newWindow();
 
             }
@@ -497,7 +500,7 @@ JMenuItem itm = new JMenuItem("Start");
 menu.add(itm);
 itm.addActionListener(new ActionListener() {
     public void actionPerformed(ActionEvent e) {
-        SVO.habitat.toggleSimulation();
+        Magnit.habitat.toggleSimulation();
         B.setEnabled(false);
         E.setEnabled(true);
     }
@@ -507,7 +510,7 @@ itm = new JMenuItem("Stop");
 menu.add(itm);
 itm.addActionListener(new ActionListener() {
     public void actionPerformed(ActionEvent e) {
-        SVO.habitat.toggleSimulation();
+        Magnit.habitat.toggleSimulation();
         B.setEnabled(false);
         E.setEnabled(true);
     }
@@ -515,8 +518,8 @@ itm.addActionListener(new ActionListener() {
 
 
 menubar.add(menu);
-menubar.add(spawnChanse_1);
-menubar.add(ZaycevNET_1);
+// menubar.add(spawnChanse_1);
+// menubar.add(ZaycevNET_1);
 menubar.add(lenta_1);
 menubar.add(visibel_1);
 menubar.add(invisible_1);
@@ -532,12 +535,12 @@ JToolBar tbCommon = new JToolBar();
         tbCommon.add(B_2);
         tbCommon.add(E_2);
         // tbCommon.addSeparator();
-        tbCommon.add(spawnChanse_2);
-        tbCommon.add(ZaycevNET_2);
+        // tbCommon.add(spawnChanse_2);
+        // tbCommon.add(ZaycevNET_2);
         tbCommon.add(lenta_2);
         tbCommon.add(visibel_2);
         tbCommon.add(invisible_2);
-        ZOV.add(tbCommon, BorderLayout.WEST);
+        MariaRa.add(tbCommon, BorderLayout.WEST);
 //ToolBar OFF
 
 
@@ -552,9 +555,9 @@ JToolBar tbCommon = new JToolBar();
         textArea.setEditable(false);
         textArea.setFocusable(false);
 
-        textArea.setText("\n Ants warriorscreated - " + App.SVO.habitat.Tarakan_1 + "\n Ants workers created - "
-                + App.SVO.habitat.Tarakan_2 + "\nAnts warriors died - " + App.SVO.habitat.Tarakan_1_Dead
-                + "\nAnts workers died - " + App.SVO.habitat.Tarakan_2_Dead + "\n");
+        textArea.setText("\n Ants warriorscreated - " + App.Magnit.habitat.Tarakan_1 + "\n Ants workers created - "
+                + App.Magnit.habitat.Tarakan_2 + "\nAnts warriors died - " + App.Magnit.habitat.Tarakan_1_Dead
+                + "\nAnts workers died - " + App.Magnit.habitat.Tarakan_2_Dead + "\n");
         return textArea;
     }
 

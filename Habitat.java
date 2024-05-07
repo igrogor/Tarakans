@@ -59,6 +59,8 @@ public class Habitat   {
                 chan.timer1.setText(String.valueOf(timer_1));
                 try {
                     chan.a = Integer.parseInt(chan.ZaycevNET.getText());
+                    if(chan.a < 0)
+                      throw new NumberFormatException();
                 } catch (NumberFormatException e) {
                     chan.fail();
                     chan.ZaycevNET.setText("1000");

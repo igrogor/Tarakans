@@ -43,14 +43,28 @@ class MessageBox extends JDialog {
             ok.setFocusable(false);
 
             add(VilkaLojka, BorderLayout.SOUTH);
-            VilkaLojka.setFocusable(false);
+            setModal(modal);
 
-            setVisible(true);
-    
+
+
+            
+            // VilkaLojka.setFocusable(false);
+            // parent.MariaRa.setFocusable(false);
+            // parent.Magnit.setFocusable(false);
+            // parent.ZaycevNET.setFocusable(false);
+            // parent.lenta.setFocusable(false);
+            // // parent.visibel.setFocusable(false);
+            // // parent.invisible.setFocusable(false);
+            // parent.B.setFocusable(false);
+            // parent.E.setFocusable(false);
+            
+
+
             ok.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    App.SVO.habitat.stopSimulation();//--------------------------остановиля на реализации окошка с статитстикой и кнопками
+                    App.Magnit.habitat.stopSimulation();//--------------------------остановиля на реализации окошка с статитстикой и кнопками
                     setVisible(false);
+                    
                     parent.B.setEnabled(true);
                     parent.E.setEnabled(false);
 
@@ -61,18 +75,21 @@ class MessageBox extends JDialog {
     
             exit.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    App.SVO.habitat.toggleSimulation();
+                    App.Magnit.habitat.toggleSimulation();
                     setVisible(false);
                 }
             });
-        }else{
+            
+        } else {
             add(parent.getText2());
             setFocusable(false);
 
             setVisible(true);
         }
-        setFocusable(false);
 
+        // setFocusable(false);
+
+        setVisible(true);
 
      }
  }

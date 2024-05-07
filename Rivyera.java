@@ -3,17 +3,18 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-
 import javax.swing.JPanel;
 
-public class Moskal extends JPanel {
+
+
+public class Rivyera extends JPanel {
     // Habitat habitat = new Habitat();
     Habitat habitat;
 
     Image a;
     
 
-    Moskal(App R2D2) {
+    Rivyera(App R2D2) {
         setPreferredSize(new Dimension(800, 800));
         habitat = new Habitat(R2D2);
     }
