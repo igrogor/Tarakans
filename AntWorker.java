@@ -13,10 +13,25 @@ public class AntWorker extends Ant{
     BufferedImage icon;
     JLabel label;
 
-    AntWorker() {
+
+    int birthTime;
+    int lifeTime;
+
+    int id;
+    App PAPO4Ka;
+
+    AntWorker(int simulationTime, App Prima) {
+        PAPO4Ka = Prima;
         Random rand = new Random();
         x = rand.nextInt(800);
         y = rand.nextInt(800);
+
+        this.birthTime = simulationTime;
+        this.lifeTime = PAPO4Ka.HARDBASS;
+
+        this.id = rand.nextInt( 1000);
+
+
         try {
             icon = ImageIO.read(new File("Tarakan_is_Photo_2.png"));
         } catch (IOException e) {
@@ -33,6 +48,9 @@ public class AntWorker extends Ant{
         System.out.println("Move");
     }
 
+    boolean isAlive(int currentTime) {
+        return currentTime - birthTime < lifeTime;
+    }
 
 
 }

@@ -4,9 +4,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
+import java.util.Vector;
 
 public class Habitat   {
     String window;
@@ -19,8 +22,8 @@ public class Habitat   {
     public int Tarakan_2_Dead;
     boolean simulationRunning;
     Timer timer;
-    ArrayList<AntWarrior> Ants1 = new ArrayList<AntWarrior>();
-    ArrayList<AntWorker> Ants2 = new ArrayList<AntWorker>();
+    // ArrayList<AntWarrior> Ants1 = new ArrayList<AntWarrior>();
+    // ArrayList<AntWorker> Ants2 = new ArrayList<AntWorker>();
     int simulationTime;
     boolean num = false;
     boolean numTimer = false;
@@ -28,9 +31,31 @@ public class Habitat   {
     int nuclearBomb = 9;
     App chan;
 
+    int warriorLifeTime;
+    int workerLifeTime;
+
+
+    Vector<AntWarrior> Ants1 = new Vector<>();
+    Vector<AntWorker> Ants2 = new Vector<>();
+    HashSet<Integer> antIds = new HashSet<>();
+    TreeMap<Integer, Integer> birthTimes = new TreeMap<>();
+
     Habitat(App Si3Pio) {
         chan = Si3Pio;
+        Ants1 = new Vector<>();
+        antIds = new HashSet<>();
+        birthTimes = new TreeMap<>();
     }
+
+    public void setWarriorLifeTime(int lifeTime) {
+        this.warriorLifeTime = lifeTime;
+    }
+
+    public void setWorkerLifeTime(int lifeTime) {
+        this.workerLifeTime = lifeTime;
+    }
+
+
     
     int setTarakan1() {
         return Tarakan_1;
@@ -105,7 +130,7 @@ public class Habitat   {
         return Tarakan_2;
     }
 
-    void Update( ArrayList<AntWarrior> Ants1, ArrayList<AntWorker> Ants2) {
+    void Update( Vector<AntWarrior>Ants1, Vector<AntWorker> Ants2) {
         Random rand = new Random();
         int x1 = rand.nextInt(10);
         int x2 = rand.nextInt(10);
@@ -117,22 +142,50 @@ public class Habitat   {
         if (timer_1 % (chan.a / 1000) == 0) {
             if (x1 > nuclearBomb ) {
                 if (x4 == 1) {
-                    Ants1.add(new AntWarrior());
-                    Tarakan_1++;
+                    // Ants1.add(new AntWarrior());
+                     Tarakan_1++;
+
+
+                    AntWarrior ant = new AntWarrior(simulationTime, chan);
+                    Ants1.add(ant);
+                    antIds.add(ant.id);
+                    birthTimes.put(ant.id, ant.birthTime);
                 } else {
-                    Ants2.add(new AntWorker());
-                    Tarakan_2++;
+                    // Ants2.add(new AntWorker());
+                     Tarakan_2++;
+
+
+                    AntWorker ant = new AntWorker(simulationTime, chan);
+                    Ants2.add(ant);
+                    antIds.add(ant.id);
+                    birthTimes.put(ant.id, ant.birthTime);
                 }
             }
-            if (!Ants1.isEmpty() && x2 > 7) {
-                Ants1.remove(x3);
-                Tarakan_1_Dead++;
+            // if (!Ants1.isEmpty() && x2 > 7) {
+            //     Ants1.remove(x3);
+            //     Tarakan_1_Dead++;
+            // }
+            // if (!Ants2.isEmpty() && x6 > 7) {
+            //     Ants2.remove(x5);
+            //     Tarakan_2_Dead++;
+            // }
+            for (AntWarrior ant : Ants1) {
+                if (!ant.isAlive(simulationTime)) {
+                    antIds.remove(ant.id);
+                    birthTimes.remove(ant.id);
+                    Tarakan_1_Dead++;
+                }
             }
-            if (!Ants2.isEmpty() && x6 > 7) {
-                Ants2.remove(x5);
-                Tarakan_2_Dead++;
+            for (AntWorker ant : Ants2) {
+                if (!ant.isAlive(simulationTime)) {
+                    antIds.remove(ant.id);
+                    birthTimes.remove(ant.id);
+                    Tarakan_2_Dead++;
+                }
             }
         }
+        Ants1.removeIf(ant -> !ant.isAlive(simulationTime));
+        Ants2.removeIf(ant -> !ant.isAlive(simulationTime));
     }
 // Безумие OFF
     public void Static(int num){

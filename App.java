@@ -14,6 +14,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -29,7 +31,9 @@ public class App extends JFrame {
     JLabel timer1;
     int period = 1000;
     TextField ZaycevNET;
+    TextField Mikhail_Evdokimov;
     int a = 1000;
+    int HARDBASS = 30;
     JButton B;
     JButton E;
     JButton B_2;
@@ -178,6 +182,23 @@ public class App extends JFrame {
         }
         MariaRa.add(ZaycevNET);
 // установка периода OFF
+
+
+// установка времени жизни ON
+Mikhail_Evdokimov = new TextField();
+Mikhail_Evdokimov.setText("30");
+Mikhail_Evdokimov.setColumns(10);
+Mikhail_Evdokimov.setFocusable(true);
+
+try {
+    HARDBASS = Integer.parseInt(Mikhail_Evdokimov.getText());
+} catch (NumberFormatException e) {
+    fail();
+    Mikhail_Evdokimov.setText("30");
+    HARDBASS = 30;
+}
+MariaRa.add(Mikhail_Evdokimov);
+// установка времени жизни OFF
 
 
 // spawn ON
@@ -545,6 +566,16 @@ JToolBar tbCommon = new JToolBar();
 
 
 
+// Объекты ON
+    JButton currentObjectsButton = new JButton("Текущие объекты");
+    currentObjectsButton.addActionListener(e -> {
+        new ObjectListDialog(this, Magnit.habitat.birthTimes).setVisible(true);
+    });
+    MariaRa.add(currentObjectsButton);
+
+// Объекты OFF
+
+
         setFocusable(true);
         pack();
         setVisible(true);
@@ -588,5 +619,6 @@ JToolBar tbCommon = new JToolBar();
         App app = new App();
     }
 }
+
 
 // Говнокод OFF
