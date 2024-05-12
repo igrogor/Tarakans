@@ -111,7 +111,7 @@ public class Habitat   {
                 resetTarakan_1();
                 resetTarakan_2();
                 startSimulation();
-            }
+        }
         }
 
     private void resetTarakan_1() {
@@ -138,62 +138,66 @@ public class Habitat   {
         int x3 = Ants1.isEmpty() ? 0 : rand.nextInt(Ants1.size());
         int x5 = Ants2.isEmpty() ? 0 : rand.nextInt(Ants2.size());
         int x4 = rand.nextInt(2);
-//Безумие ON
-        if (timer_1 % (chan.a / 1000) == 0) {
-            if (x1 > nuclearBomb ) {
-                if (x4 == 1) {
-                    // Ants1.add(new AntWarrior());
-                     Tarakan_1++;
+        //Безумие ON
 
+    if (timer_1 % (chan.a / 1000) == 0) {
+        if (x1 > nuclearBomb) {
+            if (x4 == 1) {
+                // Ants1.add(new AntWarrior());
+                Tarakan_1++;
 
-                    AntWarrior ant = new AntWarrior(simulationTime, chan);
-                    Ants1.add(ant);
-                    antIds.add(ant.id);
-                    birthTimes.put(ant.id, ant.birthTime);
-                } else {
-                    // Ants2.add(new AntWorker());
-                     Tarakan_2++;
+                AntWarrior ant = new AntWarrior(simulationTime, chan);
+                Ants1.add(ant);
+                antIds.add(ant.id);
+                birthTimes.put(ant.id, ant.birthTime);
+            } else {
+                // Ants2.add(new AntWorker());
+                Tarakan_2++;
 
-
-                    AntWorker ant = new AntWorker(simulationTime, chan);
-                    Ants2.add(ant);
-                    antIds.add(ant.id);
-                    birthTimes.put(ant.id, ant.birthTime);
-                }
-            }
-            // if (!Ants1.isEmpty() && x2 > 7) {
-            //     Ants1.remove(x3);
-            //     Tarakan_1_Dead++;
-            // }
-            // if (!Ants2.isEmpty() && x6 > 7) {
-            //     Ants2.remove(x5);
-            //     Tarakan_2_Dead++;
-            // }
-            for (AntWarrior ant : Ants1) {
-                if (!ant.isAlive(simulationTime)) {
-                    antIds.remove(ant.id);
-                    birthTimes.remove(ant.id);
-                    Tarakan_1_Dead++;
-                }
-            }
-            for (AntWorker ant : Ants2) {
-                if (!ant.isAlive(simulationTime)) {
-                    antIds.remove(ant.id);
-                    birthTimes.remove(ant.id);
-                    Tarakan_2_Dead++;
-                }
+                AntWorker ant = new AntWorker(simulationTime, chan);
+                Ants2.add(ant);
+                antIds.add(ant.id);
+                birthTimes.put(ant.id, ant.birthTime);
             }
         }
-        Ants1.removeIf(ant -> !ant.isAlive(simulationTime));
-        Ants2.removeIf(ant -> !ant.isAlive(simulationTime));
-    }
-// Безумие OFF
-    public void Static(int num){
 
-         window = new String("Ants warriorscreated - " + Tarakan_1 + " Ants workers created - " + Tarakan_2 );
-         Deats_warrior = new String("Ants warriors died - " + Tarakan_1_Dead);
-         Deats_worker = new String(" Ants workers died - " + Tarakan_2_Dead);
-        System.out.println(num);
+        // if (!Ants1.isEmpty() && x2 > 7) {
+        //     Ants1.remove(x3);
+        //     Tarakan_1_Dead++;
+        // }
+        // if (!Ants2.isEmpty() && x6 > 7) {
+        //     Ants2.remove(x5);
+        //     Tarakan_2_Dead++;
+        // }
+
+        for (AntWarrior ant : Ants1) {
+            if (!ant.isAlive(simulationTime)) {
+                antIds.remove(ant.id);
+                birthTimes.remove(ant.id);
+                // Ants1.remove(ant);
+                Tarakan_1_Dead++;
+            }
+        }
+
+        for (AntWorker ant : Ants2) {
+            if (!ant.isAlive(simulationTime)) {
+                antIds.remove(ant.id);
+                birthTimes.remove(ant.id);
+                // Ants2.remove(ant);
+                Tarakan_2_Dead++;
+            }
+        }
     }
+            Ants1.removeIf(ant -> !ant.isAlive(simulationTime));
+            Ants2.removeIf(ant -> !ant.isAlive(simulationTime));
+        }
+    // Безумие OFF
+        public void Static(int num){
+
+            window = new String("Ants warriorscreated - " + Tarakan_1 + " Ants workers created - " + Tarakan_2 );
+            Deats_warrior = new String("Ants warriors died - " + Tarakan_1_Dead);
+            Deats_worker = new String(" Ants workers died - " + Tarakan_2_Dead);
+            System.out.println(num);
+        }
 }
 

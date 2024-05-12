@@ -1,3 +1,4 @@
+import java.util.Iterator;
 import java.util.Random;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -7,10 +8,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class AntWarrior extends Ant{
+public class AntWarrior extends Ant implements Comparable<AntWarrior> {
     BufferedImage icon;
     JLabel label;
-
 
     int birthTime;
     int lifeTime;
@@ -26,8 +26,7 @@ public class AntWarrior extends Ant{
         this.birthTime = simulationTime;
         this.lifeTime = MAMO4ka.HARDBASS;
 
-        this.id = rand.nextInt( 1000);
-
+        this.id = MAMO4ka.Magnit.habitat.antIds.size() + 1;
 
         try {
             icon = ImageIO.read(new File("Tarakan_is_Photo_1.jpg"));
@@ -49,6 +48,17 @@ public class AntWarrior extends Ant{
         return currentTime - birthTime < lifeTime;
     }
 
+    int getX() {
+        return x;
+    }
+
+    @Override
+    public int compareTo(AntWarrior o) {
+        return this.getX() - o.getX();
+    }
+
+
 }
+
 
 

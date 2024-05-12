@@ -14,6 +14,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -40,6 +42,7 @@ public class App extends JFrame {
     JButton E_2;
     
     App() {
+
         setSize(2, 2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -66,6 +69,32 @@ public class App extends JFrame {
         visibel.setFocusable(false);
         
 
+        // Часть кода для Макса--------------------------------------- ON
+
+
+        AntWarrior antWarrior1 = new AntWarrior(3, Magnit.habitat.chan);
+        AntWarrior antWarrior2 = new AntWarrior(3, Magnit.habitat.chan);
+        AntWarrior antWarrior3 = new AntWarrior(3, Magnit.habitat.chan);
+        
+        Comparator<AntWarrior> antWarriorComparator = Comparator.naturalOrder();
+
+        // Создаем TreeMap с использованием нашего компаратора
+        TreeMap<AntWarrior, String> treeMap = new TreeMap<>(antWarriorComparator);
+        
+        // Вставляем элементы в TreeMap
+        treeMap.put(antWarrior1, "AntWarrior_1");
+        treeMap.put(antWarrior2, "AntWarrior_2");
+        treeMap.put(antWarrior3, "AntWarrior_3");
+        
+        // Получаем значение из TreeMap
+        String value = treeMap.get(antWarrior1);
+        System.out.println(value); // Вывод: "AntWarrior"
+
+
+        // Часть кода для Макса--------------------------------------- OFF
+
+
+
 
         visibel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -88,7 +117,6 @@ public class App extends JFrame {
         invisible.setFocusable(false);
 //OFF------------------------------------------------------------------------------------
     
-
 
   
 
