@@ -16,12 +16,22 @@ public class AntWarrior extends Ant implements Comparable<AntWarrior> {
     int lifeTime;
     int id;
     App MAMO4ka;
+    boolean derection;
+
+    int homeX; // Начальная координата X
+    int homeY; // Начальная координата Y
 
     AntWarrior(int simulationTime, App Charon_B) {
+        Random random = new Random();
+        derection = random.nextBoolean();
+        
         MAMO4ka = Charon_B;
         Random rand = new Random();
         x = rand.nextInt(800);
         y = rand.nextInt(800);
+
+        homeX = x;
+        homeY = y;
 
         this.birthTime = simulationTime;
         this.lifeTime = MAMO4ka.HARDBASS;

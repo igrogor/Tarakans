@@ -20,11 +20,24 @@ public class AntWorker extends Ant{
     int id;
     App PAPO4Ka;
 
+    boolean derection;
+
+    int homeX; // Начальная координата X
+    int homeY; // Начальная координата Y
+
     AntWorker(int simulationTime, App Prima) {
+
+        Random random = new Random();
+        derection = random.nextBoolean();
+
+
         PAPO4Ka = Prima;
         Random rand = new Random();
         x = rand.nextInt(800);
         y = rand.nextInt(800);
+
+        homeX = x;
+        homeY = y;
 
         this.birthTime = simulationTime;
         this.lifeTime = PAPO4Ka.HARDBASS;

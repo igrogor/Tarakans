@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 
 
 public class Rivyera extends JPanel {
-    // Habitat habitat = new Habitat();
+
     Habitat habitat;
 
     Image a;
