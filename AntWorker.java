@@ -13,7 +13,9 @@ public class AntWorker extends Ant{
     BufferedImage icon;
     JLabel label;
 
+    Random random = new Random();
 
+    
     int birthTime;
     int lifeTime;
 
@@ -22,12 +24,20 @@ public class AntWorker extends Ant{
 
     boolean derection;
 
-    int homeX; // Начальная координата X
-    int homeY; // Начальная координата Y
+    double homeX; // Начальная координата X
+    double homeY; // Начальная координата Y
+
+    int pre_direction = 5;
+    int direction = random.nextInt(4);
 
     AntWorker(int simulationTime, App Prima) {
 
-        Random random = new Random();
+
+
+
+
+
+
         derection = random.nextBoolean();
 
 
@@ -54,7 +64,7 @@ public class AntWorker extends Ant{
     }
 
     void draw(Graphics g) {
-        g.drawImage(icon, x, y, 60, 80, null);
+        g.drawImage(icon, (int)x, (int)y, 60, 80, null);
     }
 
     void move() {

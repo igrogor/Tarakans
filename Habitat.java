@@ -97,7 +97,7 @@ public class Habitat {
                     chan.a = 1000;
                 }
             }
-        }, 0, 1000);
+        }, 0, 25);
     }// -------------------------------------------------------------------------------------------------------
      // A
 
@@ -146,10 +146,10 @@ public class Habitat {
         int x4 = rand.nextInt(2);
         // Безумие ON
 
-        if (timer_1 % (chan.a / 1000) == 0) {
+        // if (timer_1 % (chan.a / 1000) == 0) {
             if (x1 > nuclearBomb) {
                 if (x4 == 1) {
-                    // Ants1.add(new AntWarrior());
+          
                     Tarakan_1++;
 
                     AntWarrior ant = new AntWarrior(simulationTime, chan);
@@ -157,7 +157,7 @@ public class Habitat {
                     antIds.add(ant.id);
                     birthTimes.put(ant.id, ant.birthTime);
                 } else {
-                    // Ants2.add(new AntWorker());
+              
                     Tarakan_2++;
 
                     AntWorker ant = new AntWorker(simulationTime, chan);
@@ -167,20 +167,11 @@ public class Habitat {
                 }
             }
 
-            // if (!Ants1.isEmpty() && x2 > 7) {
-            // Ants1.remove(x3);
-            // Tarakan_1_Dead++;
-            // }
-            // if (!Ants2.isEmpty() && x6 > 7) {
-            // Ants2.remove(x5);
-            // Tarakan_2_Dead++;
-            // }
-
             for (AntWarrior ant : Ants1) {
                 if (!ant.isAlive(simulationTime)) {
                     antIds.remove(ant.id);
                     birthTimes.remove(ant.id);
-                    // Ants1.remove(ant);
+                   
                     Tarakan_1_Dead++;
                 }
             }
@@ -189,11 +180,11 @@ public class Habitat {
                 if (!ant.isAlive(simulationTime)) {
                     antIds.remove(ant.id);
                     birthTimes.remove(ant.id);
-                    // Ants2.remove(ant);
+                  
                     Tarakan_2_Dead++;
                 }
             }
-        }
+    // }
         Ants1.removeIf(ant -> !ant.isAlive(simulationTime));
         Ants2.removeIf(ant -> !ant.isAlive(simulationTime));
     }

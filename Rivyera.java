@@ -26,12 +26,15 @@ public class Rivyera extends JPanel {
         Graphics g2 = a.getGraphics();
 
         g2.clearRect(0, 0, getSize().width, getSize().height);
+
+        synchronized (habitat) {
         for (int i = 0; i < habitat.Ants1.size(); i++) {
             habitat.Ants1.get(i).draw(g2);
         }
         for (int i = 0; i < habitat.Ants2.size(); i++) {
             habitat.Ants2.get(i).draw(g2);
         }
+    }
         if (habitat.num) {
             habitat.window = new String(
                     "Ants warriorscreated - " + habitat.Tarakan_1 + " Ants workers created - " + habitat.Tarakan_2);

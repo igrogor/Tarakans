@@ -18,8 +18,8 @@ public class AntWarrior extends Ant implements Comparable<AntWarrior> {
     App MAMO4ka;
     boolean derection;
 
-    int homeX; // Начальная координата X
-    int homeY; // Начальная координата Y
+    double homeX; // Начальная координата X
+    double homeY; // Начальная координата Y
 
     AntWarrior(int simulationTime, App Charon_B) {
         Random random = new Random();
@@ -47,7 +47,7 @@ public class AntWarrior extends Ant implements Comparable<AntWarrior> {
     }
 
     void draw(Graphics g) {
-        g.drawImage(icon, x, y, 80, 60, null);
+        g.drawImage(icon, (int)x, (int)y, 80, 60, null);
     }
 
     void move() {
@@ -59,7 +59,7 @@ public class AntWarrior extends Ant implements Comparable<AntWarrior> {
     }
 
     int getX() {
-        return x;
+        return (int)x;
     }
 
     @Override

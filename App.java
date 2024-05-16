@@ -29,7 +29,7 @@ public class App extends JFrame {
     MessageBox msgBox;
     MessageBox Error;
     JLabel timer1;
-    int period = 1000;
+    int period = 500;
     TextField ZaycevNET;
     TextField Mikhail_Evdokimov;
     int a = 1000;
@@ -136,6 +136,7 @@ public class App extends JFrame {
         Magnit.setFocusable(false);
 
         Timer timer = new Timer(100, new ActionListener() {
+            
             @Override
             public void actionPerformed(ActionEvent e) {
                 Magnit.repaint();
@@ -585,6 +586,9 @@ public class App extends JFrame {
 
         MariaRa.add(sleep);
         MariaRa.add(awake);
+
+        // workerAI.pauseAi();
+        // warriorAI.pauseAi();
 
         // Объекты OFF
 

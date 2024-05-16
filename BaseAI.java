@@ -1,7 +1,6 @@
 abstract class BaseAI extends Thread {
     boolean itsWork = true;
-    // App Morder = new App();
-    // Habitat New_Ant = new Habitat(Morder);
+
     public void run() {
         while (true) {
             synchronized(this) {
