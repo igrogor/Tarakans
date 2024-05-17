@@ -69,7 +69,7 @@ import javax.swing.JLabel;
 
 // }
 
-public class AntWorker extends Ant {
+public class AntWorker extends Ant implements java.io.Serializable {
 
     BufferedImage icon;
     JLabel label;

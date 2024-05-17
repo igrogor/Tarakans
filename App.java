@@ -14,15 +14,30 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PipedReader;
+import java.io.PipedWriter;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.lang.Thread;
 
-public class App extends JFrame {
+public class App extends JFrame implements java.io.Serializable {
     static JPanel MariaRa;
     static JPanel BAR;
     static Rivyera Magnit;
@@ -45,6 +60,15 @@ public class App extends JFrame {
     WorkerAntAI workerAI;
     WarriorAntAI warriorAI;
 
+    // laba - 5
+    JDialog consoleDialog;
+    JTextArea consoleTextArea;
+    PipedWriter consoleInputWriter;
+    BlockingQueue<String> commandQueue = new LinkedBlockingQueue<>();
+
+    private String configFilePath = "config.txt";
+
+    // laba - 5
     public App() {
 
         setSize(2, 2);
@@ -636,8 +660,39 @@ public class App extends JFrame {
 
         // всякое для менюbar OFF
 
+        // JMenuBar menubar = new JMenuBar();
+        // JMenu menu = new JMenu("menu");
+
+        // JMenuItem itm = new JMenuItem("Start");
+        // menu.add(itm);
+        // itm.addActionListener(new ActionListener() {
+        // public void actionPerformed(ActionEvent e) {
+        // Magnit.habitat.toggleSimulation();
+        // B.setEnabled(false);
+        // E.setEnabled(true);
+        // }
+        // });
+
+        // itm = new JMenuItem("Stop");
+        // menu.add(itm);
+        // itm.addActionListener(new ActionListener() {
+        // public void actionPerformed(ActionEvent e) {
+        // Magnit.habitat.toggleSimulation();
+        // B.setEnabled(false);
+        // E.setEnabled(true);
+        // }
+        // });
+
+        // menubar.add(menu);
+        // menubar.add(lenta_1);
+        // menubar.add(visibel_1);
+        // menubar.add(invisible_1);
+
+        // setJMenuBar(menubar);
+
         JMenuBar menubar = new JMenuBar();
-        JMenu menu = new JMenu("menu");
+        JMenu menu = new JMenu("Menu");
+        JMenu fileMenu = new JMenu("File");
 
         JMenuItem itm = new JMenuItem("Start");
         menu.add(itm);
@@ -659,7 +714,34 @@ public class App extends JFrame {
             }
         });
 
+        itm = new JMenuItem("Console");
+        menu.add(itm);
+        itm.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                createConsoleDialog();
+            }
+        });
+
+        JMenuItem saveItem = new JMenuItem("Save");
+        saveItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveSimulationState();
+            }
+        });
+        fileMenu.add(saveItem);
+
+        JMenuItem loadItem = new JMenuItem("Load");
+        loadItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadSimulationState();
+            }
+        });
+        fileMenu.add(loadItem);
+
         menubar.add(menu);
+        menubar.add(fileMenu);
         menubar.add(lenta_1);
         menubar.add(visibel_1);
         menubar.add(invisible_1);
@@ -717,6 +799,8 @@ public class App extends JFrame {
         setFocusable(true);
         pack();
         setVisible(true);
+
+        loadConfig();
     }
 
     TextArea getText1() {
@@ -753,11 +837,216 @@ public class App extends JFrame {
         setVisible(true);
     }
 
+    // LABA_5 ON
+
+
+        // работа с консолью ON
+
+    private void createConsoleDialog() {
+        consoleDialog = new JDialog(this, "Console", false);
+        consoleDialog.setSize(400, 300);
+
+        consoleTextArea = new JTextArea();
+        consoleTextArea.setEditable(false);
+        consoleDialog.add(consoleTextArea, BorderLayout.CENTER);
+
+        JTextField inputField = new JTextField();
+        inputField.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String command = inputField.getText();
+                inputField.setText("");
+                consoleTextArea.append(command + "\n");
+                try {
+                    consoleInputWriter.write(command + "\n");
+                    consoleInputWriter.flush();
+                } catch (IOException ex) {
+                    consoleTextArea.append("Error writing to console: " + ex.getMessage() + "\n");
+                }
+            }
+        });
+
+        consoleDialog.add(inputField, BorderLayout.SOUTH);
+        consoleDialog.setVisible(true);
+
+        // Set up piped streams for console input/output
+        try {
+            PipedReader consoleInputReader = new PipedReader();
+            consoleInputWriter = new PipedWriter(consoleInputReader);
+
+            Thread consoleOutputThread = new Thread(() -> {
+                try (BufferedReader reader = new BufferedReader(consoleInputReader)) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        commandQueue.put(line);
+                    }
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            consoleOutputThread.start();
+        } catch (IOException e) {
+            consoleTextArea.append("Error setting up console: " + e.getMessage() + "\n");
+        }
+
+        // Start a thread to process commands from the console
+        Thread commandProcessorThread = new Thread(() -> {
+            while (true) {
+                try {
+                    String command = commandQueue.take();
+                    processConsoleCommand(command);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        commandProcessorThread.start();
+    }
+
+    private void processConsoleCommand(String command) {
+        switch (command.trim().toLowerCase()) {
+            case "start":
+                Magnit.habitat.toggleSimulation();
+                B.setEnabled(false);
+                E.setEnabled(true);
+                B_2.setEnabled(false);
+                E_2.setEnabled(true);
+                consoleTextArea.append("Simulation started.\n");
+                break;
+            case "stop":
+                Magnit.habitat.stopSimulation();
+                B.setEnabled(true);
+                E.setEnabled(false);
+                B_2.setEnabled(true);
+                E_2.setEnabled(false);
+                consoleTextArea.append("Simulation stopped.\n");
+                break;
+            default:
+                consoleTextArea.append("Invalid command: " + command + "\n");
+        }
+    }
+    // работа с консолью OFF
+
+
+
+
+    private void loadSimulationState() {
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(selectedFile))) {
+                Magnit.habitat = (Habitat) ois.readObject(); // Загружаем объект Habitat
+                Magnit.habitat.chan = this; // Восстанавливаем ссылку на App
+                Magnit.repaint(); // Обновляем графический интерфейс
+
+                // Скорректируйте время рождения объектов, если необходимо
+                int currentTime = Magnit.habitat.simulationTime;
+                for (AntWarrior ant : Magnit.habitat.Ants1) {
+                    ant.birthTime += currentTime;
+                }
+                for (AntWorker ant : Magnit.habitat.Ants2) {
+                    ant.birthTime += currentTime;
+                }
+
+            } catch (IOException | ClassNotFoundException e) {
+                JOptionPane.showMessageDialog(this, "Error loading simulation state: " + e.getMessage(), "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void saveSimulationState() {
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showSaveDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(selectedFile))) {
+                oos.writeObject(Magnit.habitat); // Сохраняем объект Habitat
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error saving simulation state: " + e.getMessage(), "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void loadConfig() {
+        File configFile = new File(configFilePath);
+        if (configFile.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split("=");
+                    if (parts.length == 2) {
+                        String key = parts[0].trim();
+                        String value = parts[1].trim();
+
+                        switch (key) {
+                            case "simulationRunning":
+                                Magnit.habitat.simulationRunning = Boolean.parseBoolean(value);
+                                break;
+                            case "period":
+                                period = Integer.parseInt(value);
+                                ZaycevNET.setText(String.valueOf(period));
+                                break;
+                            case "HARDBASS":
+                                HARDBASS = Integer.parseInt(value);
+                                Mikhail_Evdokimov.setText(String.valueOf(HARDBASS));
+                                break;
+                            case "Ant.speed":
+                                Ant.speed = Double.parseDouble(value);
+                                break;
+                            case "WarriorAntAI.radius":
+                                WarriorAntAI.radius = Double.parseDouble(value);
+                                break;
+                            case "Magnit.habitat.nuclearBomb":
+                                Magnit.habitat.nuclearBomb = Integer.parseInt(value);
+                                break;
+                            // Add cases for other configuration parameters here
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error loading configuration: " + e.getMessage(), "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void saveConfig() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath))) {
+            writer.write("simulationRunning=" + Magnit.habitat.simulationRunning);
+            writer.newLine();
+            writer.write("period=" + period);
+            writer.newLine();
+            writer.write("HARDBASS=" + HARDBASS);
+            writer.newLine();
+            writer.write("Ant.speed=" + Ant.speed);
+            writer.newLine();
+            writer.write("WarriorAntAI.radius=" + WarriorAntAI.radius);
+            writer.newLine();
+            writer.write("Magnit.habitat.nuclearBomb=" + Magnit.habitat.nuclearBomb);
+            writer.newLine();
+            // Add lines to save other configuration parameters here
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving configuration: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    // LABA_5 OFF
+
     public static void main(String[] args) {
         // Habitat habitat = new Habitat(); // Предполагая, что Habitat - это ваш класс
 
-        App app = new App(); // Передача объектов workerAI и warriorAI в конструктор App
+        App app = new App();
+        app.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                app.saveConfig();  // Сохраняем настройки при закрытии окна
+                System.exit(0);
+            }
+        });
     }
 }
-
 // Говнокод OFF

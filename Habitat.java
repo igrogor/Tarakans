@@ -11,7 +11,7 @@ import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.Vector;
 
-public class Habitat {
+public class Habitat implements java.io.Serializable {
     String window;
     String Deats_warrior;
     String Deats_worker;

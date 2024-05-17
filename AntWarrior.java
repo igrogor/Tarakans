@@ -8,7 +8,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class AntWarrior extends Ant implements Comparable<AntWarrior> {
+public class AntWarrior extends Ant implements Comparable<AntWarrior>, java.io.Serializable {
     BufferedImage icon;
     JLabel label;
 
