@@ -44,9 +44,7 @@ public class App extends JFrame {
     WorkerAntAI workerAI;
     WarriorAntAI warriorAI;
     
-        public App(WorkerAntAI workerAI, WarriorAntAI warriorAI) {
-            this.workerAI = workerAI;
-            this.warriorAI = warriorAI;
+        public App() {
 
         setSize(2, 2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,13 +58,11 @@ public class App extends JFrame {
         MariaRa.add(B);
         MariaRa.add(E);
         Magnit = new Rivyera(this);
+        workerAI = new WorkerAntAI(Magnit.habitat);
+        warriorAI = new WarriorAntAI(Magnit.habitat);
 
-
-        WorkerAntAI be = new WorkerAntAI(Magnit.habitat);
-        WarriorAntAI bv = new WarriorAntAI(Magnit.habitat);
-        be.start();
-        bv.start();
-
+        warriorAI.start();
+        //workerAI.start();
 
 
         timer1 = new JLabel(String.valueOf(Magnit.habitat.timer_1));
@@ -139,7 +135,7 @@ public class App extends JFrame {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                Magnit.repaint();
+                //Magnit.repaint();
             }
         });
 
@@ -581,6 +577,7 @@ public class App extends JFrame {
                 warriorAI.resumAi();
             }
         });
+
         sleep.setFocusable(false);
         awake.setFocusable(false);
 
@@ -632,10 +629,9 @@ public class App extends JFrame {
     }
 
    public static void main(String[] args) {
-    Habitat habitat = new Habitat(); // Предполагая, что Habitat - это ваш класс
-    WorkerAntAI workerAI = new WorkerAntAI(habitat);
-    WarriorAntAI warriorAI = new WarriorAntAI(habitat);
-    App app = new App(workerAI, warriorAI); // Передача объектов workerAI и warriorAI в конструктор App
+    //Habitat habitat = new Habitat(); // Предполагая, что Habitat - это ваш класс
+    
+    App app = new App(); // Передача объектов workerAI и warriorAI в конструктор App
 }
 }
 

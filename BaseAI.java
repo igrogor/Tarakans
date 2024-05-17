@@ -1,5 +1,9 @@
 abstract class BaseAI extends Thread {
-    boolean itsWork = true;
+    boolean itsWork;
+
+    BaseAI() {
+        itsWork = true;
+    }
 
     public void run() {
         while (true) {
@@ -13,17 +17,25 @@ abstract class BaseAI extends Thread {
                 }
             }
             moveAi();
+            App.Magnit.repaint();
+            try {
+                Thread.sleep(1);
+            }catch(InterruptedException e){
+                System.out.println("InterruptedException");
+            }
         }
     }
     abstract public void moveAi();
 
-    public synchronized void pauseAi() {
+    public void pauseAi() {
         itsWork = false;
     }
     
-    public synchronized void resumAi(){
-        notify();
-        itsWork = true;
+    public void resumAi() {
+        synchronized (this) {
+            notify();
+            itsWork = true;   
+        }
     }
 
 }
