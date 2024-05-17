@@ -31,9 +31,10 @@ public class App extends JFrame {
     JLabel timer1;
     int period = 500;
     TextField ZaycevNET;
+    TextField SetSpead;
     TextField Mikhail_Evdokimov;
     int a = 1000;
-    int HARDBASS = 30;
+    int HARDBASS = 10000000;
     JButton B;
     JButton E;
     JButton B_2;
@@ -43,8 +44,8 @@ public class App extends JFrame {
     BaseAI DmitryShilow;
     WorkerAntAI workerAI;
     WarriorAntAI warriorAI;
-    
-        public App() {
+
+    public App() {
 
         setSize(2, 2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -62,10 +63,9 @@ public class App extends JFrame {
         warriorAI = new WarriorAntAI(Magnit.habitat);
 
         warriorAI.start();
-        //workerAI.start();
+        workerAI.start();
 
-
-        timer1 = new JLabel(String.valueOf(Magnit.habitat.timer_1));
+        timer1 = new JLabel(String.valueOf(Magnit.habitat.timer_1 / 40000));
         timer1.setVisible(Magnit.habitat.numTimer);
         B.setFocusable(false);
         E.setFocusable(false);
@@ -132,10 +132,10 @@ public class App extends JFrame {
         Magnit.setFocusable(false);
 
         Timer timer = new Timer(100, new ActionListener() {
-            
+
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Magnit.repaint();
+                // Magnit.repaint();
             }
         });
 
@@ -191,6 +191,131 @@ public class App extends JFrame {
         MariaRa.add(ZaycevNET);
         // установка периода OFF
 
+        // // установка СКОРОСТИ ON
+        // SetSpead = new TextField();
+        // SetSpead.setText("0.1");
+        // SetSpead.setColumns(10);
+        // SetSpead.setFocusable(true);
+
+        // try {
+        // Ant.speed = Double.parseDouble(SetSpead.getText());
+        // } catch (NumberFormatException e) {
+        // fail();
+        // SetSpead.setText("0.1");
+        // Ant.speed = 0.1;
+        // }
+        // MariaRa.add(SetSpead);
+        // // установка СКОРОСТИ OFF
+
+        JComboBox speedChanse = new JComboBox();
+        speedChanse.addItem("speed - 1");
+        speedChanse.addItem("speed - 2");
+        speedChanse.addItem("speed - 3");
+        speedChanse.addItem("speed - 4");
+        speedChanse.addItem("speed - 5");
+        speedChanse.addItem("speed - 6");
+        speedChanse.addItem("speed - 7");
+        speedChanse.addItem("speed - 8");
+        speedChanse.addItem("speed - 9");
+        speedChanse.addItem("speed - 10");
+        MariaRa.add(speedChanse);
+        speedChanse.setFocusable(false);
+
+        speedChanse.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                switch (speedChanse.getSelectedIndex()) {
+                    case 1:
+                        Ant.speed = 0.1;
+                        break;
+                    case 2:
+                        Ant.speed = 1;
+                        break;
+                    case 3:
+                        Ant.speed = 2;
+                        break;
+                    case 4:
+                        Ant.speed = 3;
+                        break;
+                    case 5:
+                        Ant.speed = 4;
+                        break;
+                    case 6:
+                        Ant.speed = 5;
+                        break;
+                    case 7:
+                        Ant.speed = 6;
+                        break;
+                    case 8:
+                        Ant.speed = 7;
+                        break;
+                    case 9:
+                        Ant.speed = 8;
+                        break;
+                    case 10:
+                        Ant.speed = 9;
+                        break;
+                    default:
+                        Ant.speed = 100;
+                        break;
+                }
+            }
+        });
+        // speed OFF
+
+        JComboBox radiusChanse = new JComboBox();
+        radiusChanse.addItem("speed - 1");
+        radiusChanse.addItem("speed - 2");
+        radiusChanse.addItem("speed - 3");
+        radiusChanse.addItem("speed - 4");
+        radiusChanse.addItem("speed - 5");
+        radiusChanse.addItem("speed - 6");
+        radiusChanse.addItem("speed - 7");
+        radiusChanse.addItem("speed - 8");
+        radiusChanse.addItem("speed - 9");
+        radiusChanse.addItem("speed - 10");
+        MariaRa.add(radiusChanse);
+        radiusChanse.setFocusable(false);
+
+        radiusChanse.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                switch (radiusChanse.getSelectedIndex()) {
+                    case 1:
+                        WarriorAntAI.radius = 101;
+                        break;
+                    case 2:
+                        WarriorAntAI.radius = 1;
+                        break;
+                    case 3:
+                        WarriorAntAI.radius = 5;
+                        break;
+                    case 4:
+                        WarriorAntAI.radius = 10;
+                        break;
+                    case 5:
+                        WarriorAntAI.radius = 25;
+                        break;
+                    case 6:
+                        WarriorAntAI.radius = 50;
+                        break;
+                    case 7:
+                        WarriorAntAI.radius = 100;
+                        break;
+                    case 8:
+                        WarriorAntAI.radius = 200;
+                        break;
+                    case 9:
+                        WarriorAntAI.radius = 300;
+                        break;
+                    case 10:
+                        WarriorAntAI.radius = 400;
+                        break;
+                    default:
+                        WarriorAntAI.radius = 500;
+                        break;
+                }
+            }
+        });
+
         // установка времени жизни ON
         Mikhail_Evdokimov = new TextField();
         Mikhail_Evdokimov.setText("30");
@@ -202,7 +327,7 @@ public class App extends JFrame {
         } catch (NumberFormatException e) {
             fail();
             Mikhail_Evdokimov.setText("30");
-            HARDBASS = 30;
+            HARDBASS = 1000;
         }
         MariaRa.add(Mikhail_Evdokimov);
         // установка времени жизни OFF
@@ -628,11 +753,11 @@ public class App extends JFrame {
         setVisible(true);
     }
 
-   public static void main(String[] args) {
-    //Habitat habitat = new Habitat(); // Предполагая, что Habitat - это ваш класс
-    
-    App app = new App(); // Передача объектов workerAI и warriorAI в конструктор App
-}
+    public static void main(String[] args) {
+        // Habitat habitat = new Habitat(); // Предполагая, что Habitat - это ваш класс
+
+        App app = new App(); // Передача объектов workerAI и warriorAI в конструктор App
+    }
 }
 
 // Говнокод OFF

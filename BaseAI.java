@@ -1,17 +1,17 @@
 abstract class BaseAI extends Thread {
     boolean itsWork;
-
+    // static double speed = 1;
     BaseAI() {
         itsWork = true;
     }
 
     public void run() {
         while (true) {
-            synchronized(this) {
-                if(!itsWork){
-                    try{
+            synchronized (this) {
+                if (!itsWork) {
+                    try {
                         wait();
-                    } catch(InterruptedException e){
+                    } catch (InterruptedException e) {
                         System.out.println("Гоооооооол!");
                     }
                 }
@@ -20,21 +20,22 @@ abstract class BaseAI extends Thread {
             App.Magnit.repaint();
             try {
                 Thread.sleep(1);
-            }catch(InterruptedException e){
+            } catch (InterruptedException e) {
                 System.out.println("InterruptedException");
             }
         }
     }
+
     abstract public void moveAi();
 
     public void pauseAi() {
         itsWork = false;
     }
-    
+
     public void resumAi() {
         synchronized (this) {
             notify();
-            itsWork = true;   
+            itsWork = true;
         }
     }
 

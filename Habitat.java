@@ -31,8 +31,8 @@ public class Habitat {
     int nuclearBomb = 9;
     App chan;
 
-    int warriorLifeTime;
-    int workerLifeTime;
+    int warriorLifeTime = 1000000;
+    int workerLifeTime = 1000000;
 
     Vector<AntWarrior> Ants1 = new Vector<>();
     Vector<AntWorker> Ants2 = new Vector<>();
@@ -40,10 +40,7 @@ public class Habitat {
     TreeMap<Integer, Integer> birthTimes = new TreeMap<>();
 
     public Habitat() {
-        // Инициализация вашего класса без аргументов
     }
-    
-
 
     Habitat(App Si3Pio) {
         chan = Si3Pio;
@@ -147,44 +144,44 @@ public class Habitat {
         // Безумие ON
 
         // if (timer_1 % (chan.a / 1000) == 0) {
-            if (x1 > nuclearBomb) {
-                if (x4 == 1) {
-          
-                    Tarakan_1++;
+        if (x1 > nuclearBomb) {
+            if (x4 == 1) {
 
-                    AntWarrior ant = new AntWarrior(simulationTime, chan);
-                    Ants1.add(ant);
-                    antIds.add(ant.id);
-                    birthTimes.put(ant.id, ant.birthTime);
-                } else {
-              
-                    Tarakan_2++;
+                Tarakan_1++;
 
-                    AntWorker ant = new AntWorker(simulationTime, chan);
-                    Ants2.add(ant);
-                    antIds.add(ant.id);
-                    birthTimes.put(ant.id, ant.birthTime);
-                }
+                AntWarrior ant = new AntWarrior(simulationTime, chan);
+                Ants1.add(ant);
+                antIds.add(ant.id);
+                birthTimes.put(ant.id, ant.birthTime);
+            } else {
+
+                Tarakan_2++;
+
+                AntWorker ant = new AntWorker(simulationTime, chan);
+                Ants2.add(ant);
+                antIds.add(ant.id);
+                birthTimes.put(ant.id, ant.birthTime);
             }
+        }
 
-            for (AntWarrior ant : Ants1) {
-                if (!ant.isAlive(simulationTime)) {
-                    antIds.remove(ant.id);
-                    birthTimes.remove(ant.id);
-                   
-                    Tarakan_1_Dead++;
-                }
-            }
+        for (AntWarrior ant : Ants1) {
+            if (!ant.isAlive(simulationTime)) {
+                antIds.remove(ant.id);
+                birthTimes.remove(ant.id);
 
-            for (AntWorker ant : Ants2) {
-                if (!ant.isAlive(simulationTime)) {
-                    antIds.remove(ant.id);
-                    birthTimes.remove(ant.id);
-                  
-                    Tarakan_2_Dead++;
-                }
+                Tarakan_1_Dead++;
             }
-    // }
+        }
+
+        for (AntWorker ant : Ants2) {
+            if (!ant.isAlive(simulationTime)) {
+                antIds.remove(ant.id);
+                birthTimes.remove(ant.id);
+
+                Tarakan_2_Dead++;
+            }
+        }
+        // }
         Ants1.removeIf(ant -> !ant.isAlive(simulationTime));
         Ants2.removeIf(ant -> !ant.isAlive(simulationTime));
     }

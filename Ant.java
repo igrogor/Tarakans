@@ -10,12 +10,12 @@ abstract public class Ant {
     int lifeTime;
     int id;
 
-    boolean returning; // Добавляем поле для отслеживания направления движения муравья
-    double angle; // Для муравьев-воинов, чтобы хранить текущий угол движения
-    double speed; // Для муравьев-воинов, чтобы хранить скорость движения
+    boolean returning; 
+    double angle; 
+    static double speed;
 
-
-    //protected BufferedImage icon;
+    // protected BufferedImage icon;
     abstract void draw(Graphics g);
+
     abstract void move();
 }

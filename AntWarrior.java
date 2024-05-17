@@ -24,7 +24,7 @@ public class AntWarrior extends Ant implements Comparable<AntWarrior> {
     AntWarrior(int simulationTime, App Charon_B) {
         Random random = new Random();
         derection = random.nextBoolean();
-        
+
         MAMO4ka = Charon_B;
         Random rand = new Random();
         x = rand.nextInt(800);
@@ -33,8 +33,8 @@ public class AntWarrior extends Ant implements Comparable<AntWarrior> {
         homeX = x;
         homeY = y;
 
-        this.birthTime = simulationTime;
-        this.lifeTime = MAMO4ka.HARDBASS;
+        birthTime = simulationTime;
+        lifeTime = MAMO4ka.HARDBASS;
 
         this.id = MAMO4ka.Magnit.habitat.antIds.size() + 1;
 
@@ -47,7 +47,7 @@ public class AntWarrior extends Ant implements Comparable<AntWarrior> {
     }
 
     void draw(Graphics g) {
-        g.drawImage(icon, (int)x, (int)y, 80, 60, null);
+        g.drawImage(icon, (int) x, (int) y, 80, 60, null);
     }
 
     void move() {
@@ -59,7 +59,7 @@ public class AntWarrior extends Ant implements Comparable<AntWarrior> {
     }
 
     int getX() {
-        return (int)x;
+        return (int) x;
     }
 
     @Override
@@ -67,8 +67,4 @@ public class AntWarrior extends Ant implements Comparable<AntWarrior> {
         return this.getX() - o.getX();
     }
 
-
 }
-
-
-
