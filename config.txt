@@ -1,4 +1,4 @@
-simulationRunning=false
+simulationRunning=true
 period=500
 HARDBASS=30
 Ant.speed=1.0

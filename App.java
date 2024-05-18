@@ -39,8 +39,8 @@ import java.lang.Thread;
 
 public class App extends JFrame implements java.io.Serializable {
     static JPanel MariaRa;
-    static JPanel BAR;
     static Rivyera Magnit;
+
     MessageBox msgBox;
     MessageBox Error;
     JLabel timer1;
