@@ -18,8 +18,6 @@ public class Rivyera extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        System.out.println(gg);
-        gg++;
         a = createImage(getSize().width, getSize().height);
         Graphics g2 = a.getGraphics();
 

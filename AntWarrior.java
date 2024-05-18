@@ -9,13 +9,13 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class AntWarrior extends Ant implements Comparable<AntWarrior>, java.io.Serializable {
-    BufferedImage icon;
+    transient BufferedImage icon;
     JLabel label;
 
     int birthTime;
     int lifeTime;
     int id;
-    App MAMO4ka;
+    transient App MAMO4ka;
     boolean derection;
 
     double homeX; // Начальная координата X

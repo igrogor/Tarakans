@@ -71,7 +71,7 @@ import javax.swing.JLabel;
 
 public class AntWorker extends Ant implements java.io.Serializable {
 
-    BufferedImage icon;
+    transient BufferedImage icon;
     JLabel label;
 
     Random random = new Random();
@@ -80,7 +80,7 @@ public class AntWorker extends Ant implements java.io.Serializable {
     int lifeTime;
 
     int id;
-    App PAPO4Ka;
+    transient App PAPO4Ka;
 
     boolean derection;
 

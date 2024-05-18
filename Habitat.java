@@ -21,7 +21,7 @@ public class Habitat implements java.io.Serializable {
     public int Tarakan_1_Dead;
     public int Tarakan_2_Dead;
     boolean simulationRunning;
-    Timer timer;
+    transient Timer timer;
     // ArrayList<AntWarrior> Ants1 = new ArrayList<AntWarrior>();
     // ArrayList<AntWorker> Ants2 = new ArrayList<AntWorker>();
     int simulationTime;
@@ -29,7 +29,7 @@ public class Habitat implements java.io.Serializable {
     boolean numTimer = false;
     int timer_1;
     int nuclearBomb = 9;
-    App chan;
+    transient App chan;
 
     int warriorLifeTime = 1000000;
     int workerLifeTime = 1000000;

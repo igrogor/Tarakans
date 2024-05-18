@@ -3,6 +3,7 @@
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.TextArea;
@@ -80,6 +81,7 @@ public class App extends JFrame implements java.io.Serializable {
         E = new JButton("STOP");
         MariaRa = new JPanel();
         MariaRa.setBackground(new Color(201, 139, 91));
+        MariaRa.setPreferredSize(new Dimension(800, 800));
         MariaRa.add(B);
         MariaRa.add(E);
         Magnit = new Rivyera(this);
@@ -370,6 +372,8 @@ public class App extends JFrame implements java.io.Serializable {
         spawnChanse.addItem("100%");
         MariaRa.add(spawnChanse);
         spawnChanse.setFocusable(false);
+
+        // MariaRa.Set
 
         spawnChanse.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -768,8 +772,12 @@ public class App extends JFrame implements java.io.Serializable {
         });
         MariaRa.add(currentObjectsButton);
 
-        sleep = new JButton("SLEEP");
-        awake = new JButton("AWAKE");
+        JButton sleep = new JButton("SLEEP");
+        JButton awake = new JButton("AWAKE");
+        JButton sleepwork = new JButton("SLEEPWORK");
+        JButton awakework = new JButton("AWAKEwork");
+        JButton sleepwar = new JButton("SLEEPWAR");
+        JButton awakewar = new JButton("AWAKEWAR");
 
         sleep.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -777,11 +785,34 @@ public class App extends JFrame implements java.io.Serializable {
                 warriorAI.pauseAi();
             }
         });
+        sleepwar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 
+                warriorAI.pauseAi();
+            }
+        });
+        sleepwork.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                workerAI.pauseAi();
+            }
+        });
         awake.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 workerAI.resumAi();
                 warriorAI.resumAi();
+            }
+        });
+        awakewar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                warriorAI.resumAi();
+            }
+        });
+        awakework.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                workerAI.resumAi();
+
             }
         });
 
@@ -790,6 +821,10 @@ public class App extends JFrame implements java.io.Serializable {
 
         MariaRa.add(sleep);
         MariaRa.add(awake);
+        MariaRa.add(sleepwar);
+        MariaRa.add(awakewar);
+        MariaRa.add(sleepwork);
+        MariaRa.add(awakework);
 
         // workerAI.pauseAi();
         // warriorAI.pauseAi();
@@ -839,8 +874,7 @@ public class App extends JFrame implements java.io.Serializable {
 
     // LABA_5 ON
 
-
-        // работа с консолью ON
+    // работа с консолью ON
 
     private void createConsoleDialog() {
         consoleDialog = new JDialog(this, "Console", false);
@@ -928,8 +962,31 @@ public class App extends JFrame implements java.io.Serializable {
     }
     // работа с консолью OFF
 
+    // private void loadSimulationState() {
+    //     JFileChooser fileChooser = new JFileChooser();
+    //     int result = fileChooser.showOpenDialog(this);
+    //     if (result == JFileChooser.APPROVE_OPTION) {
+    //         File selectedFile = fileChooser.getSelectedFile();
+    //         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(selectedFile))) {
+    //             Magnit.habitat = (Habitat) ois.readObject(); // Загружаем объект Habitat
+    //             Magnit.habitat.chan = this; // Восстанавливаем ссылку на App
+    //             Magnit.repaint(); // Обновляем графический интерфейс
 
+    //             // Скорректируйте время рождения объектов, если необходимо
+    //             int currentTime = Magnit.habitat.simulationTime;
+    //             for (AntWarrior ant : Magnit.habitat.Ants1) {
+    //                 ant.birthTime += currentTime;
+    //             }
+    //             for (AntWorker ant : Magnit.habitat.Ants2) {
+    //                 ant.birthTime += currentTime;
+    //             }
 
+    //         } catch (IOException | ClassNotFoundException e) {
+    //             JOptionPane.showMessageDialog(this, "Error loading simulation state: " + e.getMessage(), "Error",
+    //                     JOptionPane.ERROR_MESSAGE);
+    //         }
+    //     }
+    // }
 
     private void loadSimulationState() {
         JFileChooser fileChooser = new JFileChooser();
@@ -940,7 +997,7 @@ public class App extends JFrame implements java.io.Serializable {
                 Magnit.habitat = (Habitat) ois.readObject(); // Загружаем объект Habitat
                 Magnit.habitat.chan = this; // Восстанавливаем ссылку на App
                 Magnit.repaint(); // Обновляем графический интерфейс
-
+    
                 // Скорректируйте время рождения объектов, если необходимо
                 int currentTime = Magnit.habitat.simulationTime;
                 for (AntWarrior ant : Magnit.habitat.Ants1) {
@@ -949,19 +1006,27 @@ public class App extends JFrame implements java.io.Serializable {
                 for (AntWorker ant : Magnit.habitat.Ants2) {
                     ant.birthTime += currentTime;
                 }
-
+    
+                // *** Восстановление AI потоков ***
+                workerAI = new WorkerAntAI(Magnit.habitat);
+                warriorAI = new WarriorAntAI(Magnit.habitat);
+                workerAI.start();
+                warriorAI.start();
+                // *** Конец восстановления AI потоков ***
+    
             } catch (IOException | ClassNotFoundException e) {
                 JOptionPane.showMessageDialog(this, "Error loading simulation state: " + e.getMessage(), "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
-    }
+    }// singleton singleton = singleton.getInstance();
 
     private void saveSimulationState() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showSaveDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
+
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(selectedFile))) {
                 oos.writeObject(Magnit.habitat); // Сохраняем объект Habitat
             } catch (IOException e) {
@@ -1043,7 +1108,7 @@ public class App extends JFrame implements java.io.Serializable {
         app.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                app.saveConfig();  // Сохраняем настройки при закрытии окна
+                app.saveConfig(); // Сохраняем настройки при закрытии окна
                 System.exit(0);
             }
         });
