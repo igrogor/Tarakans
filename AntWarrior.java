@@ -62,6 +62,10 @@ public class AntWarrior extends Ant implements Comparable<AntWarrior>, java.io.S
         return (int) x;
     }
 
+
+
+
+
     @Override
     public int compareTo(AntWarrior o) {
         return this.getX() - o.getX();

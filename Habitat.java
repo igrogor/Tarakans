@@ -11,6 +11,7 @@ import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.Vector;
 
+
 public class Habitat implements java.io.Serializable {
     String window;
     String Deats_warrior;
@@ -98,9 +99,9 @@ public class Habitat implements java.io.Serializable {
     }// -------------------------------------------------------------------------------------------------------
      // A
 
-    public void stopSimulation() {
+     public void stopSimulation() {
         simulationRunning = false;
-        timer.cancel();
+        timer.cancel();  
         timer.purge();
         Ants1.clear();
         Ants2.clear();
