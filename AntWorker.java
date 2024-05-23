@@ -3,6 +3,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -177,6 +178,17 @@ public class AntWorker extends Ant implements java.io.Serializable {
 
     boolean isAlive(int currentTime) {
         return currentTime - birthTime < lifeTime;
+    }
+
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+        ois.defaultReadObject();
+        // Инициализация transient полей
+        try {
+            icon = ImageIO.read(new File("Tarakan_is_Photo_1.jpg"));
+        } catch (IOException e) {
+            icon = null;
+        }
+        label = new JLabel(new ImageIcon(icon.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
     }
 
 }

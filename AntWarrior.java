@@ -4,12 +4,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class AntWarrior extends Ant implements Comparable<AntWarrior>, java.io.Serializable {
     transient BufferedImage icon;
+
     JLabel label;
 
     int birthTime;
@@ -62,9 +64,16 @@ public class AntWarrior extends Ant implements Comparable<AntWarrior>, java.io.S
         return (int) x;
     }
 
-
-
-
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+        ois.defaultReadObject();
+        // Инициализация transient полей
+        try {
+            icon = ImageIO.read(new File("Tarakan_is_Photo_1.jpg"));
+        } catch (IOException e) {
+            icon = null;
+        }
+        label = new JLabel(new ImageIcon(icon.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+    }
 
     @Override
     public int compareTo(AntWarrior o) {

@@ -60,7 +60,8 @@ public class App extends JFrame implements java.io.Serializable {
     BaseAI DmitryShilow;
     WorkerAntAI workerAI;
     WarriorAntAI warriorAI;
-
+    Singleton singleton = Singleton.getInstance(); // Получаем единственный экземпляр
+    Singleton copy = Singleton.getInstance(); // Объявляем copy здесь
     // laba - 5
     JDialog consoleDialog;
     JTextArea consoleTextArea;
@@ -962,52 +963,144 @@ public class App extends JFrame implements java.io.Serializable {
     }
     // работа с консолью OFF
 
+    // private void loadSimulationState() {
+    // JFileChooser fileChooser = new JFileChooser();
+    // int result = fileChooser.showOpenDialog(this);
+    // if (result == JFileChooser.APPROVE_OPTION) {
+    // File selectedFile = fileChooser.getSelectedFile();
+    // try (ObjectInputStream ois = new ObjectInputStream(new
+    // FileInputStream(selectedFile))) {
+    // Magnit.habitat = (Habitat) ois.readObject(); // Загружаем объект Habitat
+    // Magnit.habitat.chan = this; // Восстанавливаем ссылку на App
+    // Magnit.repaint(); // Обновляем графический интерфейс
 
+    // int currentTime = Magnit.habitat.simulationTime;
+    // for (AntWarrior ant : Magnit.habitat.Ants1) {
+    // ant.birthTime += currentTime;
+    // }
+    // for (AntWorker ant : Magnit.habitat.Ants2) {
+    // ant.birthTime += currentTime;
+    // }
+
+    // // *** Восстановление AI потоков ***
+    // workerAI = new WorkerAntAI(Magnit.habitat);
+    // warriorAI = new WarriorAntAI(Magnit.habitat);
+    // workerAI.start();
+    // warriorAI.start();
+
+    // Magnit.habitat.startSimulation(); // перезапустит таймер
+
+    // } catch (IOException | ClassNotFoundException e) {
+    // JOptionPane.showMessageDialog(this, "Error loading simulation state: " +
+    // e.getMessage(), "Error",
+    // JOptionPane.ERROR_MESSAGE);
+    // }
+    // }
+    // }// singleton singleton = singleton.getInstance();
+
+    // private void loadSimulationState() {
+    // JFileChooser fileChooser = new JFileChooser();
+    // int result = fileChooser.showOpenDialog(this);
+    // if (result == JFileChooser.APPROVE_OPTION) {
+    // File selectedFile = fileChooser.getSelectedFile();
+
+    // try (ObjectInputStream ois = new ObjectInputStream(new
+    // FileInputStream(selectedFile))) {
+    // Magnit.habitat = (Habitat) ois.readObject();
+    // Magnit.habitat.chan = this;
+    // Magnit.repaint();
+
+    // int currentTime = Magnit.habitat.simulationTime;
+
+    // // Adjust birth times for loaded ants:
+    // for (AntWarrior ant : Magnit.habitat.Ants1) {
+    // ant.birthTime += currentTime;
+    // }
+    // for (AntWorker ant : Magnit.habitat.Ants2) {
+    // ant.birthTime += currentTime;
+    // }
+
+    // // Re-create AI threads:
+    // workerAI = new WorkerAntAI(Magnit.habitat);
+    // warriorAI = new WarriorAntAI(Magnit.habitat);
+    // workerAI.start();
+    // warriorAI.start();
+
+    // Magnit.habitat.startSimulation(); // Restart the timer
+
+    // } catch (IOException | ClassNotFoundException e) {
+    // JOptionPane.showMessageDialog(this, "Error loading simulation state: " +
+    // e.getMessage(), "Error",
+    // JOptionPane.ERROR_MESSAGE);
+    // }
+    // }
+    // }
+
+    // private void saveSimulationState() {
+    // JFileChooser fileChooser = new JFileChooser();
+    // int result = fileChooser.showSaveDialog(this);
+    // if (result == JFileChooser.APPROVE_OPTION) {
+    // File selectedFile = fileChooser.getSelectedFile();
+
+    // try (ObjectOutputStream oos = new ObjectOutputStream(new
+    // FileOutputStream(selectedFile))) {
+    // oos.writeObject(Magnit.habitat); // Сохраняем объект Habitat
+    // } catch (IOException e) {
+    // JOptionPane.showMessageDialog(this, "Error saving simulation state: " +
+    // e.getMessage(), "Error",
+    // JOptionPane.ERROR_MESSAGE);
+    // }
+    // }
+    // }
 
     private void loadSimulationState() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(selectedFile))) {
-                Magnit.habitat = (Habitat) ois.readObject(); // Загружаем объект Habitat
-                Magnit.habitat.chan = this; // Восстанавливаем ссылку на App
-                Magnit.repaint(); // Обновляем графический интерфейс
     
-              
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(selectedFile))) {
+                copy = (Singleton) ois.readObject(); // Загружаем данные в copy
+    
+                // Обновляем состояние симуляции из copy
+                Magnit.habitat = copy.getHabitat();
+                Magnit.habitat.chan = this;
+                Magnit.repaint();
+
                 int currentTime = Magnit.habitat.simulationTime;
+
+                // Adjust birth times for loaded ants:
                 for (AntWarrior ant : Magnit.habitat.Ants1) {
                     ant.birthTime += currentTime;
                 }
                 for (AntWorker ant : Magnit.habitat.Ants2) {
                     ant.birthTime += currentTime;
                 }
-    
-                // *** Восстановление AI потоков ***
+
+                // Re-create AI threads:
                 workerAI = new WorkerAntAI(Magnit.habitat);
                 warriorAI = new WarriorAntAI(Magnit.habitat);
                 workerAI.start();
                 warriorAI.start();
-    
-            
-                Magnit.habitat.startSimulation(); // перезапустит таймер
-                
-    
+
+                Magnit.habitat.startSimulation(); // Restart the timer
+
             } catch (IOException | ClassNotFoundException e) {
                 JOptionPane.showMessageDialog(this, "Error loading simulation state: " + e.getMessage(), "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
-    }// singleton singleton = singleton.getInstance();
+    }
 
     private void saveSimulationState() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showSaveDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-
+            // Удаляем строку: Singleton copy;
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(selectedFile))) {
-                oos.writeObject(Magnit.habitat); // Сохраняем объект Habitat
+                copy.setHabitat(Magnit.habitat); // Обновляем Habitat в Singleton
+                oos.writeObject(copy); // Сохраняем объект copy
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error saving simulation state: " + e.getMessage(), "Error",
                         JOptionPane.ERROR_MESSAGE);

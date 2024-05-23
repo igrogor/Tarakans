@@ -1,6 +1,6 @@
 abstract class BaseAI extends Thread {
     boolean itsWork;
-    // static double speed = 1;
+
     BaseAI() {
         itsWork = true;
     }
