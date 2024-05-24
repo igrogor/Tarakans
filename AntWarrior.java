@@ -10,18 +10,18 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class AntWarrior extends Ant implements Comparable<AntWarrior>, java.io.Serializable {
-    transient BufferedImage icon;
+    transient static BufferedImage icon;
 
     JLabel label;
 
     int birthTime;
-    int lifeTime;
+    int lifeTime = 100;
     int id;
     transient App MAMO4ka;
     boolean derection;
 
-    double homeX; // Начальная координата X
-    double homeY; // Начальная координата Y
+    double homeX;
+    double homeY;
 
     AntWarrior(int simulationTime, App Charon_B) {
         Random random = new Random();
@@ -36,12 +36,12 @@ public class AntWarrior extends Ant implements Comparable<AntWarrior>, java.io.S
         homeY = y;
 
         birthTime = simulationTime;
-        lifeTime = MAMO4ka.HARDBASS;
+        // lifeTime = MAMO4ka.HARDBASS;
 
         this.id = MAMO4ka.Magnit.habitat.antIds.size() + 1;
 
         try {
-            icon = ImageIO.read(new File("Tarakan_is_Photo_1.jpg"));
+            icon = ImageIO.read(new File("image.png"));
         } catch (IOException e) {
             icon = null;
         }

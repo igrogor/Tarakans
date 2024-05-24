@@ -33,7 +33,7 @@ class MessageBox extends JDialog {
 
             ok.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    App.Magnit.habitat.stopSimulation(); 
+                    App.Magnit.habitat.stopSimulation();
                     setVisible(false);
 
                     parent.B.setEnabled(true);

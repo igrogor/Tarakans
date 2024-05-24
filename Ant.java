@@ -10,8 +10,8 @@ abstract public class Ant implements java.io.Serializable {
     int lifeTime;
     int id;
 
-    boolean returning; 
-    double angle; 
+    boolean returning;
+    double angle;
     static double speed;
 
     // protected BufferedImage icon;

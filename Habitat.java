@@ -11,7 +11,6 @@ import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.Vector;
 
-
 public class Habitat implements java.io.Serializable {
     String window;
     String Deats_warrior;
@@ -23,17 +22,16 @@ public class Habitat implements java.io.Serializable {
     public int Tarakan_2_Dead;
     boolean simulationRunning;
     transient Timer timer;
-    // ArrayList<AntWarrior> Ants1 = new ArrayList<AntWarrior>();
-    // ArrayList<AntWorker> Ants2 = new ArrayList<AntWorker>();
     int simulationTime;
     boolean num = false;
     boolean numTimer = false;
     int timer_1;
     int nuclearBomb = 9;
     transient App chan;
-
+    long pauseSeconds, seconds;
     int warriorLifeTime = 1000000;
     int workerLifeTime = 1000000;
+    
 
     Vector<AntWarrior> Ants1 = new Vector<>();
     Vector<AntWorker> Ants2 = new Vector<>();
@@ -75,6 +73,16 @@ public class Habitat implements java.io.Serializable {
         return Tarakan_2_Dead;
     }
 
+    // public void startSimulation() {
+    //     simulationRunning = true;
+    //     timer = new Timer();
+    //     timer.scheduleAtFixedRate(new TimerTask() {
+    //         @Override
+    //         public void run() {
+    //             Update(Ants1, Ants2);
+    //             simulationTime++;
+    //             timer_1++;
+    //             chan.timer1.setText(String.valueOf(simulationTime));
     public void startSimulation() {
         simulationRunning = true;
         timer = new Timer();
@@ -84,7 +92,7 @@ public class Habitat implements java.io.Serializable {
                 Update(Ants1, Ants2);
                 simulationTime++;
                 timer_1++;
-                chan.timer1.setText(String.valueOf(timer_1));
+                chan.timer1.setText(String.valueOf(simulationTime));
                 try {
                     chan.a = Integer.parseInt(chan.ZaycevNET.getText());
                     if (chan.a < 0)
@@ -99,10 +107,21 @@ public class Habitat implements java.io.Serializable {
     }// -------------------------------------------------------------------------------------------------------
      // A
 
-     public void stopSimulation() {
+    // public void stopSimulation() {
+    //     simulationRunning = false;
+    //     timer.cancel();
+    //     timer.purge();
+    //     Ants1.clear();
+    //     Ants2.clear();
+    //     timer_1 = 0;
+    // }
+
+    public void stopSimulation() {
         simulationRunning = false;
-        timer.cancel();  
-        timer.purge();
+        if (timer != null) { // Проверяем, существует ли timer
+            timer.cancel();
+            timer.purge();
+        }
         Ants1.clear();
         Ants2.clear();
         timer_1 = 0;
@@ -116,6 +135,48 @@ public class Habitat implements java.io.Serializable {
             resetTarakan_2();
             startSimulation();
         }
+    }
+
+    // public void pauseSim() {
+    //     System.out.println("\nПриостанавливаем симуляцию...");
+    //     timer.cancel();
+    //     System.out.println("Время симуляции: " + simulationTime);
+    //     pauseSeconds = System.currentTimeMillis();
+    // }
+
+    public void pauseSim() {
+        System.out.println("\nПриостанавливаем симуляцию...");
+        if (timer != null) {
+            timer.cancel(); 
+        }
+        System.out.println("Время симуляции: " + simulationTime);
+        pauseSeconds = System.currentTimeMillis(); // Запоминаем время паузы
+    }
+
+    public void resumeSim() {
+        System.out.println("\nВозобновляем симуляцию...");
+        if (timer != null) {
+            // Сброс таймера, чтобы он начал заново с паузы
+            timer.cancel();
+            timer.purge(); 
+        }
+
+        // Начинаем таймер заново, с учетом времени, которое прошло на паузе
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Update(Ants1, Ants2);
+                simulationTime++; // Увеличиваем время симуляции
+                timer_1++; // Увеличиваем таймер
+                chan.timer1.setText(String.valueOf(simulationTime));
+                // ... (остальной код)
+            }
+        }, 0, 25); // 25 - период в миллисекундах
+
+        // Обновляем время, чтобы оно соответствовало времени на паузе
+        long currentSeconds = System.currentTimeMillis(); 
+        simulationTime += (currentSeconds - pauseSeconds) / 25; // Добавляем пропущенное время
     }
 
     private void resetTarakan_1() {

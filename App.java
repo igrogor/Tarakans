@@ -33,6 +33,7 @@ import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -54,7 +55,7 @@ public class App extends JFrame implements java.io.Serializable {
     JButton B;
     JButton E;
     JButton B_2;
-    JButton E_2;
+    JButton E_2, Pause, Resume;
     JButton awake;
     JButton sleep;
     BaseAI DmitryShilow;
@@ -140,12 +141,26 @@ public class App extends JFrame implements java.io.Serializable {
         E.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Magnit.habitat.stopSimulation();
-                // статистика по тараканам
-                // MariaRa.add(textArea);
                 newWindow();
 
             }
         });
+
+        Pause = new JButton("Pause");
+        Pause.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.pauseSim();
+            }
+        });
+        MariaRa.add(Pause);
+
+        Resume = new JButton("Resume");
+        Resume.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.resumeSim(); // Снимаем симуляцию с паузы
+            }
+        });
+        MariaRa.add(Resume);
 
         // stop "Tarakan the game"
         // ------------------------------------------------------------------
@@ -217,22 +232,6 @@ public class App extends JFrame implements java.io.Serializable {
         }
         MariaRa.add(ZaycevNET);
         // установка периода OFF
-
-        // // установка СКОРОСТИ ON
-        // SetSpead = new TextField();
-        // SetSpead.setText("0.1");
-        // SetSpead.setColumns(10);
-        // SetSpead.setFocusable(true);
-
-        // try {
-        // Ant.speed = Double.parseDouble(SetSpead.getText());
-        // } catch (NumberFormatException e) {
-        // fail();
-        // SetSpead.setText("0.1");
-        // Ant.speed = 0.1;
-        // }
-        // MariaRa.add(SetSpead);
-        // // установка СКОРОСТИ OFF
 
         JComboBox speedChanse = new JComboBox();
         speedChanse.addItem("speed - 1");
@@ -665,34 +664,6 @@ public class App extends JFrame implements java.io.Serializable {
 
         // всякое для менюbar OFF
 
-        // JMenuBar menubar = new JMenuBar();
-        // JMenu menu = new JMenu("menu");
-
-        // JMenuItem itm = new JMenuItem("Start");
-        // menu.add(itm);
-        // itm.addActionListener(new ActionListener() {
-        // public void actionPerformed(ActionEvent e) {
-        // Magnit.habitat.toggleSimulation();
-        // B.setEnabled(false);
-        // E.setEnabled(true);
-        // }
-        // });
-
-        // itm = new JMenuItem("Stop");
-        // menu.add(itm);
-        // itm.addActionListener(new ActionListener() {
-        // public void actionPerformed(ActionEvent e) {
-        // Magnit.habitat.toggleSimulation();
-        // B.setEnabled(false);
-        // E.setEnabled(true);
-        // }
-        // });
-
-        // menubar.add(menu);
-        // menubar.add(lenta_1);
-        // menubar.add(visibel_1);
-        // menubar.add(invisible_1);
-
         // setJMenuBar(menubar);
 
         JMenuBar menubar = new JMenuBar();
@@ -827,9 +798,6 @@ public class App extends JFrame implements java.io.Serializable {
         MariaRa.add(sleepwork);
         MariaRa.add(awakework);
 
-        // workerAI.pauseAi();
-        // warriorAI.pauseAi();
-
         // Объекты OFF
 
         setFocusable(true);
@@ -905,7 +873,6 @@ public class App extends JFrame implements java.io.Serializable {
         consoleDialog.add(inputField, BorderLayout.SOUTH);
         consoleDialog.setVisible(true);
 
-        // Set up piped streams for console input/output
         try {
             PipedReader consoleInputReader = new PipedReader();
             consoleInputWriter = new PipedWriter(consoleInputReader);
@@ -925,7 +892,6 @@ public class App extends JFrame implements java.io.Serializable {
             consoleTextArea.append("Error setting up console: " + e.getMessage() + "\n");
         }
 
-        // Start a thread to process commands from the console
         Thread commandProcessorThread = new Thread(() -> {
             while (true) {
                 try {
@@ -963,108 +929,33 @@ public class App extends JFrame implements java.io.Serializable {
     }
     // работа с консолью OFF
 
-    // private void loadSimulationState() {
-    // JFileChooser fileChooser = new JFileChooser();
-    // int result = fileChooser.showOpenDialog(this);
-    // if (result == JFileChooser.APPROVE_OPTION) {
-    // File selectedFile = fileChooser.getSelectedFile();
-    // try (ObjectInputStream ois = new ObjectInputStream(new
-    // FileInputStream(selectedFile))) {
-    // Magnit.habitat = (Habitat) ois.readObject(); // Загружаем объект Habitat
-    // Magnit.habitat.chan = this; // Восстанавливаем ссылку на App
-    // Magnit.repaint(); // Обновляем графический интерфейс
-
-    // int currentTime = Magnit.habitat.simulationTime;
-    // for (AntWarrior ant : Magnit.habitat.Ants1) {
-    // ant.birthTime += currentTime;
-    // }
-    // for (AntWorker ant : Magnit.habitat.Ants2) {
-    // ant.birthTime += currentTime;
-    // }
-
-    // // *** Восстановление AI потоков ***
-    // workerAI = new WorkerAntAI(Magnit.habitat);
-    // warriorAI = new WarriorAntAI(Magnit.habitat);
-    // workerAI.start();
-    // warriorAI.start();
-
-    // Magnit.habitat.startSimulation(); // перезапустит таймер
-
-    // } catch (IOException | ClassNotFoundException e) {
-    // JOptionPane.showMessageDialog(this, "Error loading simulation state: " +
-    // e.getMessage(), "Error",
-    // JOptionPane.ERROR_MESSAGE);
-    // }
-    // }
-    // }// singleton singleton = singleton.getInstance();
-
-    // private void loadSimulationState() {
-    // JFileChooser fileChooser = new JFileChooser();
-    // int result = fileChooser.showOpenDialog(this);
-    // if (result == JFileChooser.APPROVE_OPTION) {
-    // File selectedFile = fileChooser.getSelectedFile();
-
-    // try (ObjectInputStream ois = new ObjectInputStream(new
-    // FileInputStream(selectedFile))) {
-    // Magnit.habitat = (Habitat) ois.readObject();
-    // Magnit.habitat.chan = this;
-    // Magnit.repaint();
-
-    // int currentTime = Magnit.habitat.simulationTime;
-
-    // // Adjust birth times for loaded ants:
-    // for (AntWarrior ant : Magnit.habitat.Ants1) {
-    // ant.birthTime += currentTime;
-    // }
-    // for (AntWorker ant : Magnit.habitat.Ants2) {
-    // ant.birthTime += currentTime;
-    // }
-
-    // // Re-create AI threads:
-    // workerAI = new WorkerAntAI(Magnit.habitat);
-    // warriorAI = new WarriorAntAI(Magnit.habitat);
-    // workerAI.start();
-    // warriorAI.start();
-
-    // Magnit.habitat.startSimulation(); // Restart the timer
-
-    // } catch (IOException | ClassNotFoundException e) {
-    // JOptionPane.showMessageDialog(this, "Error loading simulation state: " +
-    // e.getMessage(), "Error",
-    // JOptionPane.ERROR_MESSAGE);
-    // }
-    // }
-    // }
-
-    // private void saveSimulationState() {
-    // JFileChooser fileChooser = new JFileChooser();
-    // int result = fileChooser.showSaveDialog(this);
-    // if (result == JFileChooser.APPROVE_OPTION) {
-    // File selectedFile = fileChooser.getSelectedFile();
-
-    // try (ObjectOutputStream oos = new ObjectOutputStream(new
-    // FileOutputStream(selectedFile))) {
-    // oos.writeObject(Magnit.habitat); // Сохраняем объект Habitat
-    // } catch (IOException e) {
-    // JOptionPane.showMessageDialog(this, "Error saving simulation state: " +
-    // e.getMessage(), "Error",
-    // JOptionPane.ERROR_MESSAGE);
-    // }
-    // }
-    // }
-
     private void loadSimulationState() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
+        Magnit.habitat.stopSimulation();
+
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-    
+
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(selectedFile))) {
                 copy = (Singleton) ois.readObject(); // Загружаем данные в copy
-    
+
                 // Обновляем состояние симуляции из copy
                 Magnit.habitat = copy.getHabitat();
                 Magnit.habitat.chan = this;
+
+                try {
+                    AntWarrior.icon = ImageIO.read(new File("image.png"));
+                } catch (IOException e) {
+                    AntWarrior.icon = null;
+                }
+
+                try {
+                    AntWorker.icon = ImageIO.read(new File("Tarakan_is_Photo_2.png"));
+                } catch (IOException e) {
+                    AntWorker.icon = null;
+                }
+
                 Magnit.repaint();
 
                 int currentTime = Magnit.habitat.simulationTime;
@@ -1085,6 +976,10 @@ public class App extends JFrame implements java.io.Serializable {
 
                 Magnit.habitat.startSimulation(); // Restart the timer
 
+                workerAI.pauseAi();
+                warriorAI.pauseAi();
+                Magnit.habitat.pauseSim();
+
             } catch (IOException | ClassNotFoundException e) {
                 JOptionPane.showMessageDialog(this, "Error loading simulation state: " + e.getMessage(), "Error",
                         JOptionPane.ERROR_MESSAGE);
@@ -1097,6 +992,11 @@ public class App extends JFrame implements java.io.Serializable {
         int result = fileChooser.showSaveDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
+            Magnit.habitat.pauseSim();
+
+            workerAI.pauseAi();
+            warriorAI.pauseAi();
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Удаляем строку: Singleton copy;
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(selectedFile))) {
                 copy.setHabitat(Magnit.habitat); // Обновляем Habitat в Singleton
@@ -1105,8 +1005,17 @@ public class App extends JFrame implements java.io.Serializable {
                 JOptionPane.showMessageDialog(this, "Error saving simulation state: " + e.getMessage(), "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
+
+            Magnit.habitat.resumeSim();
+            workerAI.resumAi();
+            warriorAI.resumAi();
+
         }
     }
+    // private void saveSimulationState() {
+
+    // }
+    // private void loadSimulationState() {}
 
     private void loadConfig() {
         File configFile = new File(configFilePath);
@@ -1140,7 +1049,7 @@ public class App extends JFrame implements java.io.Serializable {
                             case "Magnit.habitat.nuclearBomb":
                                 Magnit.habitat.nuclearBomb = Integer.parseInt(value);
                                 break;
-                            // Add cases for other configuration parameters here
+
                         }
                     }
                 }
