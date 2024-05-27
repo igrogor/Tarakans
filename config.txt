@@ -1,0 +1,6 @@
+simulationRunning=false
+period=500
+HARDBASS=30
+Ant.speed=1.0
+WarriorAntAI.radius=1.0
+Magnit.habitat.nuclearBomb=8

@@ -1,0 +1,1505 @@
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JFrame;
+
+abstract public class Ant {
+    protected double x;
+    protected double y;
+    int birthTime;
+    int lifeTime;
+    int id;
+
+    boolean returning; 
+    double angle; 
+    static double speed;
+
+    // protected BufferedImage icon;
+    abstract void draw(Graphics g);
+
+    abstract void move();
+}
+import java.util.Iterator;
+import java.util.Random;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+
+public class AntWarrior extends Ant implements Comparable<AntWarrior> {
+    BufferedImage icon;
+    JLabel label;
+
+    int birthTime;
+    int lifeTime;
+    int id;
+    App MAMO4ka;
+    boolean derection;
+
+    double homeX; // Начальная координата X
+    double homeY; // Начальная координата Y
+
+    AntWarrior(int simulationTime, App Charon_B) {
+        Random random = new Random();
+        derection = random.nextBoolean();
+
+        MAMO4ka = Charon_B;
+        Random rand = new Random();
+        x = rand.nextInt(800);
+        y = rand.nextInt(800);
+
+        homeX = x;
+        homeY = y;
+
+        birthTime = simulationTime;
+        lifeTime = MAMO4ka.HARDBASS;
+
+        this.id = MAMO4ka.Magnit.habitat.antIds.size() + 1;
+
+        try {
+            icon = ImageIO.read(new File("Tarakan_is_Photo_1.jpg"));
+        } catch (IOException e) {
+            icon = null;
+        }
+        label = new JLabel(new ImageIcon(icon.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+    }
+
+    void draw(Graphics g) {
+        g.drawImage(icon, (int) x, (int) y, 80, 60, null);
+    }
+
+    void move() {
+        System.out.println("Move");
+    }
+
+    boolean isAlive(int currentTime) {
+        return currentTime - birthTime < lifeTime;
+    }
+
+    int getX() {
+        return (int) x;
+    }
+
+    @Override
+    public int compareTo(AntWarrior o) {
+        return this.getX() - o.getX();
+    }
+
+}
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Random;
+
+import javax.imageio.ImageIO;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
+// public class AntWorker extends Ant{
+//     BufferedImage icon;
+//     JLabel label;
+
+//     Random random = new Random();
+
+//     int birthTime;
+//     int lifeTime;
+
+//     int id;
+//     App PAPO4Ka;
+
+//     boolean derection;
+
+//     double homeX; // Начальная координата X
+//     double homeY; // Начальная координата Y
+
+//     int pre_direction = 5;
+//     int direction = random.nextInt(4);
+
+//     AntWorker(int simulationTime, App Prima) {
+
+//         derection = random.nextBoolean();
+
+//         PAPO4Ka = Prima;
+//         Random rand = new Random();
+//         x = rand.nextInt(800);
+//         y = rand.nextInt(800);
+
+//         homeX = x;
+//         homeY = y;
+
+//         this.birthTime = simulationTime;
+//         this.lifeTime = PAPO4Ka.HARDBASS;
+
+//         this.id = rand.nextInt( 1000);
+
+//         try {
+//             icon = ImageIO.read(new File("Tarakan_is_Photo_2.png"));
+//         } catch (IOException e) {
+//             icon = null;
+//         }
+//         label = new JLabel(new ImageIcon(icon.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+//     }
+
+//     void draw(Graphics g) {
+//         g.drawImage(icon, (int)x, (int)y, 60, 80, null);
+//     }
+
+//     void move() {
+//         System.out.println("Move");
+//     }
+
+//     boolean isAlive(int currentTime) {
+//         return currentTime - birthTime < lifeTime;
+//     }
+
+// }
+
+public class AntWorker extends Ant {
+
+    BufferedImage icon;
+    JLabel label;
+
+    Random random = new Random();
+
+    int birthTime;
+    int lifeTime;
+
+    int id;
+    App PAPO4Ka;
+
+    boolean derection;
+
+    double homeX; // Начальная координата X
+    double homeY; // Начальная координата Y
+
+    int pre_direction = 5;
+    int direction = random.nextInt(4);
+
+    double targetX;
+    double targetY;
+    boolean returningToHome;
+
+    // double speed = 1.0; // скорость движения
+
+    // Конструктор
+    AntWorker(int simulationTime, App Prima) {
+
+        PAPO4Ka = Prima;
+        Random rand = new Random();
+        x = rand.nextInt(800);
+        y = rand.nextInt(800);
+
+        homeX = x;
+        homeY = y;
+
+        birthTime = simulationTime;
+        lifeTime = PAPO4Ka.HARDBASS;
+
+        this.id = rand.nextInt(1000);
+
+        try {
+            icon = ImageIO.read(new File("Tarakan_is_Photo_2.png"));
+        } catch (IOException e) {
+            icon = null;
+        }
+        label = new JLabel(new ImageIcon(icon.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+
+        // Инициализация целевых координат и флага возврата
+        setRandomTarget();
+        returningToHome = false;
+    }
+
+    void setRandomTarget() {
+        int corner = random.nextInt(4);
+        switch (corner) {
+            case 0: // [0,0]
+                targetX = 0;
+                targetY = 0;
+                break;
+            case 1: // [0,800]
+                targetX = 0;
+                targetY = 800;
+                break;
+            case 2: // [800,0]
+                targetX = 800;
+                targetY = 0;
+                break;
+            case 3: // [800,800]
+                targetX = 800;
+                targetY = 800;
+                break;
+        }
+    }
+
+    void moveTowardsTarget() {
+        double dx = targetX - x;
+        double dy = targetY - y;
+        double distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < speed) {
+            x = targetX;
+            y = targetY;
+            if (returningToHome) {
+                returningToHome = false;
+                setRandomTarget();
+            } else {
+                targetX = homeX;
+                targetY = homeY;
+                returningToHome = true;
+            }
+        } else {
+            x += dx / distance * speed;
+            y += dy / distance * speed;
+        }
+    }
+
+    void draw(Graphics g) {
+        g.drawImage(icon, (int) x, (int) y, 60, 80, null);
+    }
+
+    void move() {
+        System.out.println("Move");
+    }
+
+    boolean isAlive(int currentTime) {
+        return currentTime - birthTime < lifeTime;
+    }
+
+}
+// Говнокод ON
+
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.TextArea;
+import java.awt.TextComponent;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Vector;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.lang.Thread;
+
+public class App extends JFrame {
+    static JPanel MariaRa;
+    static JPanel BAR;
+    static Rivyera Magnit;
+    MessageBox msgBox;
+    MessageBox Error;
+    JLabel timer1;
+    int period = 500;
+    TextField ZaycevNET;
+    TextField SetSpead;
+    TextField Mikhail_Evdokimov;
+    int a = 1000;
+    int HARDBASS = 10000000;
+    JButton B;
+    JButton E;
+    JButton B_2;
+    JButton E_2;
+    JButton awake;
+    JButton sleep;
+    BaseAI DmitryShilow;
+    WorkerAntAI workerAI;
+    WarriorAntAI warriorAI;
+
+    public App() {
+
+        setSize(2, 2);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        B = new JButton("START");
+        B.setFont(new Font("Papyrus", Font.ITALIC, 40));
+        E = new JButton("STOP");
+        MariaRa = new JPanel();
+        MariaRa.setBackground(new Color(201, 139, 91));
+        MariaRa.add(B);
+        MariaRa.add(E);
+        Magnit = new Rivyera(this);
+        workerAI = new WorkerAntAI(Magnit.habitat);
+        warriorAI = new WarriorAntAI(Magnit.habitat);
+
+        warriorAI.start();
+        workerAI.start();
+
+        timer1 = new JLabel(String.valueOf(Magnit.habitat.timer_1 / 40000));
+        timer1.setVisible(Magnit.habitat.numTimer);
+        B.setFocusable(false);
+        E.setFocusable(false);
+        // статистика по такраканам ON
+        // -------------------------------------------------------
+        ButtonGroup group = new ButtonGroup();
+        JRadioButton visibel, invisible;
+        visibel = new JRadioButton("VISIBLE TIME");
+        group.add(visibel);
+        MariaRa.add(visibel);
+        MariaRa.setFocusable(false);
+        visibel.setFocusable(false);
+
+        visibel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.numTimer = true;
+                timer1.setVisible(Magnit.habitat.numTimer);
+            }
+        });
+
+        invisible = new JRadioButton("INVISIBLE TIME");
+        group.add(invisible);
+        MariaRa.add(invisible);
+        invisible.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.numTimer = false;
+                timer1.setVisible(Magnit.habitat.numTimer);
+            }
+        });
+        timer1.setFocusable(false);
+
+        invisible.setFocusable(false);
+        // OFF------------------------------------------------------------------------------------
+
+        // start "Tarakan the game"
+        // -------------------------------------------------------------------
+        B.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.toggleSimulation();
+                B.setEnabled(false);
+                E.setEnabled(true);
+            }
+        });
+
+        E.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.stopSimulation();
+                // статистика по тараканам
+                // MariaRa.add(textArea);
+                newWindow();
+
+            }
+        });
+
+        // stop "Tarakan the game"
+        // ------------------------------------------------------------------
+
+        MariaRa.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 3, Color.BLACK));
+
+        add(MariaRa, BorderLayout.WEST);
+        add(Magnit, BorderLayout.CENTER);
+
+        MariaRa.setFocusable(false);
+        Magnit.setFocusable(false);
+
+        Timer timer = new Timer(100, new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Magnit.repaint();
+            }
+        });
+
+        timer.start();
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_B) {
+                    System.out.println("B");
+                    Magnit.habitat.toggleSimulation();
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_E) {
+                    System.out.println("E");
+                    Magnit.habitat.stopSimulation();
+                    newWindow();
+                    msgBox.setVisible(true);
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_T) {
+                    System.out.println("T");
+                    Magnit.habitat.numTimer = !Magnit.habitat.numTimer;
+                    visibel.setSelected(Magnit.habitat.numTimer);// --- ???????????????????????????????????????
+                    invisible.setSelected(!Magnit.habitat.numTimer);// ----??????????????????????????????
+                    timer1.setVisible(Magnit.habitat.numTimer);
+
+                }
+            }
+        });
+
+        JCheckBox lenta = new JCheckBox("statistic");
+        lenta.setFocusable(false);
+
+        lenta.addItemListener((ItemListener) new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                msgBox.setVisible(!msgBox.isVisible());
+            }
+        });
+
+        // установка периода ON
+        ZaycevNET = new TextField();
+        ZaycevNET.setText("1000");
+        ZaycevNET.setColumns(10);
+        ZaycevNET.setFocusable(true);
+
+        try {
+            a = Integer.parseInt(ZaycevNET.getText());
+        } catch (NumberFormatException e) {
+            fail();
+            ZaycevNET.setText("1000");
+            a = 1000;
+        }
+        MariaRa.add(ZaycevNET);
+        // установка периода OFF
+
+        // // установка СКОРОСТИ ON
+        // SetSpead = new TextField();
+        // SetSpead.setText("0.1");
+        // SetSpead.setColumns(10);
+        // SetSpead.setFocusable(true);
+
+        // try {
+        // Ant.speed = Double.parseDouble(SetSpead.getText());
+        // } catch (NumberFormatException e) {
+        // fail();
+        // SetSpead.setText("0.1");
+        // Ant.speed = 0.1;
+        // }
+        // MariaRa.add(SetSpead);
+        // // установка СКОРОСТИ OFF
+
+        JComboBox speedChanse = new JComboBox();
+        speedChanse.addItem("speed - 1");
+        speedChanse.addItem("speed - 2");
+        speedChanse.addItem("speed - 3");
+        speedChanse.addItem("speed - 4");
+        speedChanse.addItem("speed - 5");
+        speedChanse.addItem("speed - 6");
+        speedChanse.addItem("speed - 7");
+        speedChanse.addItem("speed - 8");
+        speedChanse.addItem("speed - 9");
+        speedChanse.addItem("speed - 10");
+        MariaRa.add(speedChanse);
+        speedChanse.setFocusable(false);
+
+        speedChanse.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                switch (speedChanse.getSelectedIndex()) {
+                    case 1:
+                        Ant.speed = 0.1;
+                        break;
+                    case 2:
+                        Ant.speed = 1;
+                        break;
+                    case 3:
+                        Ant.speed = 2;
+                        break;
+                    case 4:
+                        Ant.speed = 3;
+                        break;
+                    case 5:
+                        Ant.speed = 4;
+                        break;
+                    case 6:
+                        Ant.speed = 5;
+                        break;
+                    case 7:
+                        Ant.speed = 6;
+                        break;
+                    case 8:
+                        Ant.speed = 7;
+                        break;
+                    case 9:
+                        Ant.speed = 8;
+                        break;
+                    case 10:
+                        Ant.speed = 9;
+                        break;
+                    default:
+                        Ant.speed = 100;
+                        break;
+                }
+            }
+        });
+        // speed OFF
+
+        JComboBox radiusChanse = new JComboBox();
+        radiusChanse.addItem("speed - 1");
+        radiusChanse.addItem("speed - 2");
+        radiusChanse.addItem("speed - 3");
+        radiusChanse.addItem("speed - 4");
+        radiusChanse.addItem("speed - 5");
+        radiusChanse.addItem("speed - 6");
+        radiusChanse.addItem("speed - 7");
+        radiusChanse.addItem("speed - 8");
+        radiusChanse.addItem("speed - 9");
+        radiusChanse.addItem("speed - 10");
+        MariaRa.add(radiusChanse);
+        radiusChanse.setFocusable(false);
+
+        radiusChanse.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                switch (radiusChanse.getSelectedIndex()) {
+                    case 1:
+                        WarriorAntAI.radius = 101;
+                        break;
+                    case 2:
+                        WarriorAntAI.radius = 1;
+                        break;
+                    case 3:
+                        WarriorAntAI.radius = 5;
+                        break;
+                    case 4:
+                        WarriorAntAI.radius = 10;
+                        break;
+                    case 5:
+                        WarriorAntAI.radius = 25;
+                        break;
+                    case 6:
+                        WarriorAntAI.radius = 50;
+                        break;
+                    case 7:
+                        WarriorAntAI.radius = 100;
+                        break;
+                    case 8:
+                        WarriorAntAI.radius = 200;
+                        break;
+                    case 9:
+                        WarriorAntAI.radius = 300;
+                        break;
+                    case 10:
+                        WarriorAntAI.radius = 400;
+                        break;
+                    default:
+                        WarriorAntAI.radius = 500;
+                        break;
+                }
+            }
+        });
+
+        // установка времени жизни ON
+        Mikhail_Evdokimov = new TextField();
+        Mikhail_Evdokimov.setText("30");
+        Mikhail_Evdokimov.setColumns(10);
+        Mikhail_Evdokimov.setFocusable(true);
+
+        try {
+            HARDBASS = Integer.parseInt(Mikhail_Evdokimov.getText());
+        } catch (NumberFormatException e) {
+            fail();
+            Mikhail_Evdokimov.setText("30");
+            HARDBASS = 1000;
+        }
+        MariaRa.add(Mikhail_Evdokimov);
+        // установка времени жизни OFF
+
+        // spawn ON
+        JComboBox spawnChanse = new JComboBox();
+        spawnChanse.addItem("10%");
+        spawnChanse.addItem("20%");
+        spawnChanse.addItem("30%");
+        spawnChanse.addItem("40%");
+        spawnChanse.addItem("50%");
+        spawnChanse.addItem("60%");
+        spawnChanse.addItem("70%");
+        spawnChanse.addItem("80%");
+        spawnChanse.addItem("90%");
+        spawnChanse.addItem("100%");
+        MariaRa.add(spawnChanse);
+        spawnChanse.setFocusable(false);
+
+        spawnChanse.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                switch (spawnChanse.getSelectedIndex()) {
+                    case 1:
+                        Magnit.habitat.nuclearBomb = 9;
+                        break;
+                    case 2:
+                        Magnit.habitat.nuclearBomb = 8;
+                        break;
+                    case 3:
+                        Magnit.habitat.nuclearBomb = 7;
+                        break;
+                    case 4:
+                        Magnit.habitat.nuclearBomb = 6;
+                        break;
+                    case 5:
+                        Magnit.habitat.nuclearBomb = 5;
+                        break;
+                    case 6:
+                        Magnit.habitat.nuclearBomb = 4;
+                        break;
+                    case 7:
+                        Magnit.habitat.nuclearBomb = 3;
+                        break;
+                    case 8:
+                        Magnit.habitat.nuclearBomb = 2;
+                        break;
+                    case 9:
+                        Magnit.habitat.nuclearBomb = 1;
+                        break;
+                    case 10:
+                        Magnit.habitat.nuclearBomb = 0;
+                        break;
+                    default:
+                        Magnit.habitat.nuclearBomb = 9;
+                        break;
+                }
+            }
+        });
+        // spawn OFF
+
+        MariaRa.add(lenta);
+        MariaRa.add(timer1, BorderLayout.EAST);
+
+        // всякое для менюbar ON
+
+        JComboBox spawnChanse_1 = new JComboBox();
+        TextField ZaycevNET_1 = new TextField();
+        JCheckBox lenta_1 = new JCheckBox();
+        ButtonGroup group_1 = new ButtonGroup();
+        JRadioButton visibel_1 = new JRadioButton();
+        JRadioButton invisible_1 = new JRadioButton();
+
+        spawnChanse_1.setFocusable(false);
+        ZaycevNET_1.setFocusable(true);
+        lenta_1.setFocusable(false);
+        visibel_1.setFocusable(false);
+        invisible_1.setFocusable(false);
+
+        spawnChanse_1.addItem("10%");
+        spawnChanse_1.addItem("20%");
+        spawnChanse_1.addItem("30%");
+        spawnChanse_1.addItem("40%");
+        spawnChanse_1.addItem("50%");
+        spawnChanse_1.addItem("60%");
+        spawnChanse_1.addItem("70%");
+        spawnChanse_1.addItem("80%");
+        spawnChanse_1.addItem("90%");
+        spawnChanse_1.addItem("100%");
+        spawnChanse_1.setFocusable(false);
+        spawnChanse_1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                switch (spawnChanse_1.getSelectedIndex()) {
+                    case 1:
+                        Magnit.habitat.nuclearBomb = 9;
+                        break;
+                    case 2:
+                        Magnit.habitat.nuclearBomb = 8;
+                        break;
+                    case 3:
+                        Magnit.habitat.nuclearBomb = 7;
+                        break;
+                    case 4:
+                        Magnit.habitat.nuclearBomb = 6;
+                        break;
+                    case 5:
+                        Magnit.habitat.nuclearBomb = 5;
+                        break;
+                    case 6:
+                        Magnit.habitat.nuclearBomb = 4;
+                        break;
+                    case 7:
+                        Magnit.habitat.nuclearBomb = 3;
+                        break;
+                    case 8:
+                        Magnit.habitat.nuclearBomb = 2;
+                        break;
+                    case 9:
+                        Magnit.habitat.nuclearBomb = 1;
+                        break;
+                    case 10:
+                        Magnit.habitat.nuclearBomb = 0;
+                        break;
+                    default:
+                        Magnit.habitat.nuclearBomb = 9;
+                        break;
+                }
+            }
+        });
+
+        ZaycevNET_1.setText("1000");
+        ZaycevNET_1.setColumns(10);
+        ZaycevNET_1.setFocusable(false);
+
+        try {
+            a = Integer.parseInt(ZaycevNET_1.getText());
+            if (a < 0)
+                throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            fail();
+            ZaycevNET_1.setText("1000");
+            a = 1000;
+        }
+
+        lenta_1.setFocusable(false);
+        lenta_1.addItemListener((ItemListener) new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                msgBox.setVisible(!msgBox.isVisible());
+            }
+        });
+
+        visibel_1 = new JRadioButton("VISIBLE TIME");
+        group.add(visibel_1);
+        MariaRa.setFocusable(false);
+        visibel.setFocusable(false);
+
+        visibel_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.numTimer = true;
+                timer1.setVisible(Magnit.habitat.numTimer);
+            }
+        });
+
+        invisible_1 = new JRadioButton("INVISIBLE TIME");
+        group.add(invisible_1);
+        invisible_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.numTimer = false;
+                timer1.setVisible(Magnit.habitat.numTimer);
+            }
+        });
+        timer1.setFocusable(false);
+        invisible_1.setFocusable(false);
+
+        // всякое для менюbar OFF
+
+        // menuBar ON
+        // -------------------------------------------------------------------
+
+        JComboBox spawnChanse_2 = new JComboBox();
+        TextField ZaycevNET_2 = new TextField();
+        JCheckBox lenta_2 = new JCheckBox();
+        ButtonGroup group_2 = new ButtonGroup();
+        JRadioButton visibel_2 = new JRadioButton();
+        JRadioButton invisible_2 = new JRadioButton();
+        B_2 = new JButton("START");
+        E_2 = new JButton("STOP");
+
+        spawnChanse_2.setFocusable(false);
+        ZaycevNET_2.setFocusable(true);
+        lenta_2.setFocusable(false);
+        visibel_2.setFocusable(false);
+        invisible_2.setFocusable(false);
+        B_2.setFocusable(false);
+        E_2.setFocusable(false);
+
+        spawnChanse_2.addItem("10%");
+        spawnChanse_2.addItem("20%");
+        spawnChanse_2.addItem("30%");
+        spawnChanse_2.addItem("40%");
+        spawnChanse_2.addItem("50%");
+        spawnChanse_2.addItem("60%");
+        spawnChanse_2.addItem("70%");
+        spawnChanse_2.addItem("80%");
+        spawnChanse_2.addItem("90%");
+        spawnChanse_2.addItem("100%");
+
+        spawnChanse_2.setFocusable(false);
+        spawnChanse_2.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                switch (spawnChanse_2.getSelectedIndex()) {
+                    case 1:
+                        Magnit.habitat.nuclearBomb = 9;
+                        break;
+                    case 2:
+                        Magnit.habitat.nuclearBomb = 8;
+                        break;
+                    case 3:
+                        Magnit.habitat.nuclearBomb = 7;
+                        break;
+                    case 4:
+                        Magnit.habitat.nuclearBomb = 6;
+                        break;
+                    case 5:
+                        Magnit.habitat.nuclearBomb = 5;
+                        break;
+                    case 6:
+                        Magnit.habitat.nuclearBomb = 4;
+                        break;
+                    case 7:
+                        Magnit.habitat.nuclearBomb = 3;
+                        break;
+                    case 8:
+                        Magnit.habitat.nuclearBomb = 2;
+                        break;
+                    case 9:
+                        Magnit.habitat.nuclearBomb = 1;
+                        break;
+                    case 10:
+                        Magnit.habitat.nuclearBomb = 0;
+                        break;
+                    default:
+                        Magnit.habitat.nuclearBomb = 9;
+                        break;
+                }
+            }
+        });
+
+        ZaycevNET_2.setText("1000");
+        ZaycevNET_2.setColumns(10);
+        ZaycevNET_2.setFocusable(false);
+
+        try {
+            a = Integer.parseInt(ZaycevNET_2.getText());
+        } catch (NumberFormatException e) {
+            fail();
+            ZaycevNET_2.setText("1000");
+            a = 1000;
+        }
+
+        lenta_2.setFocusable(false);
+        lenta_2.addItemListener((ItemListener) new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                msgBox.setVisible(!msgBox.isVisible());
+            }
+        });
+
+        visibel_2 = new JRadioButton("VISIBLE TIME");
+        group.add(visibel_2);
+        MariaRa.setFocusable(false);
+        visibel.setFocusable(false);
+
+        visibel_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.numTimer = true;
+                timer1.setVisible(Magnit.habitat.numTimer);
+            }
+        });
+
+        invisible_2 = new JRadioButton("INVISIBLE TIME");
+        group.add(invisible_2);
+
+        invisible_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.numTimer = false;
+                timer1.setVisible(Magnit.habitat.numTimer);
+            }
+        });
+        timer1.setFocusable(false);
+        invisible_2.setFocusable(false);
+
+        B_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.toggleSimulation();
+                B_2.setEnabled(false);
+                E_2.setEnabled(true);
+            }
+        });
+
+        E_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.stopSimulation();
+                newWindow();
+
+            }
+        });
+
+        // всякое для менюbar OFF
+
+        JMenuBar menubar = new JMenuBar();
+        JMenu menu = new JMenu("menu");
+
+        JMenuItem itm = new JMenuItem("Start");
+        menu.add(itm);
+        itm.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.toggleSimulation();
+                B.setEnabled(false);
+                E.setEnabled(true);
+            }
+        });
+
+        itm = new JMenuItem("Stop");
+        menu.add(itm);
+        itm.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Magnit.habitat.toggleSimulation();
+                B.setEnabled(false);
+                E.setEnabled(true);
+            }
+        });
+
+        menubar.add(menu);
+        menubar.add(lenta_1);
+        menubar.add(visibel_1);
+        menubar.add(invisible_1);
+
+        setJMenuBar(menubar);
+
+        // menuBar OFF ----------------------------------------------------------------
+
+        // ToolBar ON
+        JToolBar tbCommon = new JToolBar();
+        tbCommon.add(B_2);
+        tbCommon.add(E_2);
+
+        tbCommon.add(lenta_2);
+        tbCommon.add(visibel_2);
+        tbCommon.add(invisible_2);
+        MariaRa.add(tbCommon, BorderLayout.WEST);
+        // ToolBar OFF
+
+        // Объекты ON
+        JButton currentObjectsButton = new JButton("Текущие объекты");
+        currentObjectsButton.addActionListener(e -> {
+            new ObjectListDialog(this, Magnit.habitat.birthTimes).setVisible(true);
+        });
+        MariaRa.add(currentObjectsButton);
+
+        sleep = new JButton("SLEEP");
+        awake = new JButton("AWAKE");
+
+        sleep.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                workerAI.pauseAi();
+                warriorAI.pauseAi();
+            }
+        });
+
+        awake.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                workerAI.resumAi();
+                warriorAI.resumAi();
+            }
+        });
+
+        sleep.setFocusable(false);
+        awake.setFocusable(false);
+
+        MariaRa.add(sleep);
+        MariaRa.add(awake);
+
+        // workerAI.pauseAi();
+        // warriorAI.pauseAi();
+
+        // Объекты OFF
+
+        setFocusable(true);
+        pack();
+        setVisible(true);
+    }
+
+    TextArea getText1() {
+        TextArea textArea = new TextArea();
+        textArea.setEditable(false);
+        textArea.setFocusable(false);
+
+        textArea.setText("\n Ants warriorscreated - " + App.Magnit.habitat.Tarakan_1 + "\n Ants workers created - "
+                + App.Magnit.habitat.Tarakan_2 + "\nAnts warriors died - " + App.Magnit.habitat.Tarakan_1_Dead
+                + "\nAnts workers died - " + App.Magnit.habitat.Tarakan_2_Dead + "\n");
+        return textArea;
+    }
+
+    TextArea getText2() {
+        TextArea textArea = new TextArea();
+        textArea.setEditable(true);
+        textArea.setEditable(false);
+        textArea.setText("Ошибка, вы совершили ошибку ввода");
+        textArea.setFocusable(false);
+
+        return textArea;
+    }
+
+    void newWindow() {
+        msgBox = new MessageBox("String of message", new JFrame(), "Message box", true, this, true);
+        msgBox.setFocusable(false);
+
+    }
+
+    void fail() {
+        Error = new MessageBox("String of message", new JFrame(), "Message box", true, this, false);
+        Error.setFocusable(false);
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        // Habitat habitat = new Habitat(); // Предполагая, что Habitat - это ваш класс
+
+        App app = new App(); // Передача объектов workerAI и warriorAI в конструктор App
+    }
+}
+
+// Говнокод OFF
+// объявление нового класса диалога
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.TextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.Vector;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+class MessageBox extends JDialog {
+
+    public Object textArea;
+
+    public MessageBox(String m, JFrame p, String t, boolean modal, App parent, boolean typeMessage) {
+        setSize(400, 200);
+        JPanel VilkaLojka = new JPanel(new GridLayout(1, 2));
+
+        setLayout(new BorderLayout());
+
+        if (typeMessage == true) {
+            add(parent.getText1());
+
+            JButton exit = new JButton("exit");
+            JButton ok = new JButton("ok");
+            VilkaLojka.add(ok);
+            VilkaLojka.add(exit);
+            exit.setFocusable(false);
+            ok.setFocusable(false);
+
+            add(VilkaLojka, BorderLayout.SOUTH);
+            setModal(modal);
+
+            // VilkaLojka.setFocusable(false);
+            // parent.MariaRa.setFocusable(false);
+            // parent.Magnit.setFocusable(false);
+            // parent.ZaycevNET.setFocusable(false);
+            // parent.lenta.setFocusable(false);
+            // // parent.visibel.setFocusable(false);
+            // // parent.invisible.setFocusable(false);
+            // parent.B.setFocusable(false);
+            // parent.E.setFocusable(false);
+
+            ok.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    App.Magnit.habitat.stopSimulation();// --------------------------остановиля на реализации окошка с
+                                                        // статитстикой и кнопками
+                    setVisible(false);
+
+                    parent.B.setEnabled(true);
+                    parent.E.setEnabled(false);
+
+                    parent.B_2.setEnabled(true);
+                    parent.E_2.setEnabled(false);
+                }
+            });
+
+            exit.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    App.Magnit.habitat.toggleSimulation();
+                    setVisible(false);
+                }
+            });
+
+        } else {
+            add(parent.getText2());
+            setFocusable(false);
+
+            setVisible(true);
+        }
+
+        // setFocusable(false);
+
+        setVisible(true);
+
+    }
+}
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeMap;
+import java.util.Vector;
+
+public class Habitat {
+    String window;
+    String Deats_warrior;
+    String Deats_worker;
+    // Image a;
+    public int Tarakan_1;
+    public int Tarakan_2;
+    public int Tarakan_1_Dead;
+    public int Tarakan_2_Dead;
+    boolean simulationRunning;
+    Timer timer;
+    // ArrayList<AntWarrior> Ants1 = new ArrayList<AntWarrior>();
+    // ArrayList<AntWorker> Ants2 = new ArrayList<AntWorker>();
+    int simulationTime;
+    boolean num = false;
+    boolean numTimer = false;
+    int timer_1;
+    int nuclearBomb = 9;
+    App chan;
+
+    int warriorLifeTime = 1000000;
+    int workerLifeTime = 1000000;
+
+    Vector<AntWarrior> Ants1 = new Vector<>();
+    Vector<AntWorker> Ants2 = new Vector<>();
+    HashSet<Integer> antIds = new HashSet<>();
+    TreeMap<Integer, Integer> birthTimes = new TreeMap<>();
+
+    public Habitat() {
+    }
+
+    Habitat(App Si3Pio) {
+        chan = Si3Pio;
+        Ants1 = new Vector<>();
+        antIds = new HashSet<>();
+        birthTimes = new TreeMap<>();
+
+    }
+
+    public void setWarriorLifeTime(int lifeTime) {
+        this.warriorLifeTime = lifeTime;
+    }
+
+    public void setWorkerLifeTime(int lifeTime) {
+        this.workerLifeTime = lifeTime;
+    }
+
+    int setTarakan1() {
+        return Tarakan_1;
+    }
+
+    int setTarakan2() {
+        return Tarakan_2;
+    }
+
+    int setTarakan1_dead() {
+        return Tarakan_1_Dead;
+    }
+
+    int setTarakan2_dead() {
+        return Tarakan_2_Dead;
+    }
+
+    public void startSimulation() {
+        simulationRunning = true;
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Update(Ants1, Ants2);
+                simulationTime++;
+                timer_1++;
+                chan.timer1.setText(String.valueOf(timer_1));
+                try {
+                    chan.a = Integer.parseInt(chan.ZaycevNET.getText());
+                    if (chan.a < 0)
+                        throw new NumberFormatException();
+                } catch (NumberFormatException e) {
+                    chan.fail();
+                    chan.ZaycevNET.setText("1000");
+                    chan.a = 1000;
+                }
+            }
+        }, 0, 25);
+    }// -------------------------------------------------------------------------------------------------------
+     // A
+
+    public void stopSimulation() {
+        simulationRunning = false;
+        timer.cancel();
+        timer.purge();
+        Ants1.clear();
+        Ants2.clear();
+        timer_1 = 0;
+    }
+
+    public void toggleSimulation() {
+        if (simulationRunning) {
+            stopSimulation();
+        } else {
+            resetTarakan_1();
+            resetTarakan_2();
+            startSimulation();
+        }
+    }
+
+    private void resetTarakan_1() {
+        Tarakan_1 = 0;
+    }
+
+    private void resetTarakan_2() {
+        Tarakan_2 = 0;
+    }
+
+    public int getNumStudents() {
+        return Tarakan_1;
+    }
+
+    public int getNumStudentGirls() {
+        return Tarakan_2;
+    }
+
+    void Update(Vector<AntWarrior> Ants1, Vector<AntWorker> Ants2) {
+        Random rand = new Random();
+        int x1 = rand.nextInt(10);
+        int x2 = rand.nextInt(10);
+        int x6 = rand.nextInt(10);
+        int x3 = Ants1.isEmpty() ? 0 : rand.nextInt(Ants1.size());
+        int x5 = Ants2.isEmpty() ? 0 : rand.nextInt(Ants2.size());
+        int x4 = rand.nextInt(2);
+        // Безумие ON
+
+        // if (timer_1 % (chan.a / 1000) == 0) {
+        if (x1 > nuclearBomb) {
+            if (x4 == 1) {
+
+                Tarakan_1++;
+
+                AntWarrior ant = new AntWarrior(simulationTime, chan);
+                Ants1.add(ant);
+                antIds.add(ant.id);
+                birthTimes.put(ant.id, ant.birthTime);
+            } else {
+
+                Tarakan_2++;
+
+                AntWorker ant = new AntWorker(simulationTime, chan);
+                Ants2.add(ant);
+                antIds.add(ant.id);
+                birthTimes.put(ant.id, ant.birthTime);
+            }
+        }
+
+        for (AntWarrior ant : Ants1) {
+            if (!ant.isAlive(simulationTime)) {
+                antIds.remove(ant.id);
+                birthTimes.remove(ant.id);
+
+                Tarakan_1_Dead++;
+            }
+        }
+
+        for (AntWorker ant : Ants2) {
+            if (!ant.isAlive(simulationTime)) {
+                antIds.remove(ant.id);
+                birthTimes.remove(ant.id);
+
+                Tarakan_2_Dead++;
+            }
+        }
+        // }
+        Ants1.removeIf(ant -> !ant.isAlive(simulationTime));
+        Ants2.removeIf(ant -> !ant.isAlive(simulationTime));
+    }
+
+    // Безумие OFF
+    public void Static(int num) {
+
+        window = new String("Ants warriorscreated - " + Tarakan_1 + " Ants workers created - " + Tarakan_2);
+        Deats_warrior = new String("Ants warriors died - " + Tarakan_1_Dead);
+        Deats_worker = new String(" Ants workers died - " + Tarakan_2_Dead);
+        System.out.println(num);
+    }
+}
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.TextArea;
+import java.awt.TextComponent;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Vector;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+class ObjectListDialog extends JDialog {
+    ObjectListDialog(JFrame parent, TreeMap<Integer, Integer> birthTimes) {
+        super(parent, "Список объектов", true);
+
+        JList<String> objectList = new JList<>(new DefaultListModel<>());
+        DefaultListModel<String> model = (DefaultListModel<String>) objectList.getModel();
+
+        for (Map.Entry<Integer, Integer> entry : birthTimes.entrySet()) {
+            model.addElement("ID: " + entry.getKey() + ", Время рождения: " + entry.getValue());
+        }
+
+        JPanel contentPane = new JPanel(new BorderLayout());
+        contentPane.add(new JScrollPane(objectList), BorderLayout.CENTER);
+        setContentPane(contentPane);
+
+        pack();
+        setLocationRelativeTo(parent);
+    }
+}
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import javax.swing.JPanel;
+
+public class Rivyera extends JPanel {
+
+    Habitat habitat;
+    long gg = 0;
+    Image a;
+
+    Rivyera(App R2D2) {
+        setPreferredSize(new Dimension(800, 800));
+        habitat = new Habitat(R2D2);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        System.out.println(gg);
+        gg++;
+        a = createImage(getSize().width, getSize().height);
+        Graphics g2 = a.getGraphics();
+
+        g2.clearRect(0, 0, getSize().width, getSize().height);
+
+        for (int i = 0; i < habitat.Ants1.size(); i++) {
+            habitat.Ants1.get(i).draw(g2);
+        }
+        for (int i = 0; i < habitat.Ants2.size(); i++) {
+            habitat.Ants2.get(i).draw(g2);
+        }
+        // }
+        if (habitat.num) {
+            habitat.window = new String(
+                    "Ants warriorscreated - " + habitat.Tarakan_1 + " Ants workers created - " + habitat.Tarakan_2);
+            habitat.Deats_warrior = new String("Ants warriors died - " + habitat.Tarakan_1_Dead);
+            habitat.Deats_worker = new String(" Ants workers died - " + habitat.Tarakan_2_Dead);
+
+            g2.setColor(Color.blue);
+            setFont(new Font("Papyrus", Font.ITALIC, 40));
+            g2.drawString(habitat.window, 100, 300);
+
+            g2.setColor(Color.red);
+            setFont(new Font("Papyrus", Font.ITALIC, 40));
+            g2.drawString(habitat.Deats_warrior, 200, 400);
+
+            g2.setColor(Color.green);
+            setFont(new Font("Papyrus", Font.ITALIC, 40));
+            g2.drawString(habitat.Deats_worker, 600, 600);
+
+        }
+        g.drawImage(a, 0, 0, null);
+    }
+}
+
+class WarriorAntAI extends BaseAI {
+    Habitat New_Warrior;
+    App Morder;
+    Rivyera Olimp;
+    static double radius = 100;
+    
+
+    public WarriorAntAI(Habitat New_Warrior) {
+        this.New_Warrior = New_Warrior;
+    }
+
+    public synchronized void moveAi() {
+        for (int i = 0; i < New_Warrior.Ants1.size(); i++) {
+
+            if (i < New_Warrior.Ants1.size()) {
+
+                
+                double centerX = New_Warrior.Ants1.get(i).homeX;
+                double centerY = New_Warrior.Ants1.get(i).homeY + radius;
+
+                New_Warrior.Ants1.get(i).angle += (Math.PI / 180) * Ant.speed * 10;
+                New_Warrior.Ants1.get(i).x = (int) (centerX + radius * Math.cos(New_Warrior.Ants1.get(i).angle));
+                New_Warrior.Ants1.get(i).y = (int) (centerY + radius * Math.sin(New_Warrior.Ants1.get(i).angle));
+            }
+        }
+    }
+
+}
+// import java.util.Random;
+
+// class WorkerAntAI extends BaseAI {
+//     Habitat habitat;
+//     Random random = new Random();
+
+//     WorkerAntAI(Habitat habitat) {
+//         this.habitat = habitat;
+//     }
+
+//     @Override
+//     public void moveAi() {
+
+//     }
+// }
+
+// import java.util.Random;
+
+// class WorkerAntAI extends BaseAI {
+//     Habitat habitat;
+//     Random random = new Random();
+
+//     WorkerAntAI(Habitat habitat) {
+//         this.habitat = habitat;
+//     }
+
+//     @Override
+//     public void moveAi() {
+//         for (AntWorker ant : habitat.Ants2) {
+//             ant.moveTowardsTarget();
+//         }
+//     }
+// }
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+class WorkerAntAI extends BaseAI {
+    Habitat habitat;
+    Random random = new Random();
+
+    WorkerAntAI(Habitat habitat) {
+        this.habitat = habitat;
+    }
+
+    @Override
+    public void moveAi() {
+        List<AntWorker> antsCopy;
+        synchronized (habitat.Ants2) {
+            antsCopy = new ArrayList<>(habitat.Ants2);
+        }
+        for (AntWorker ant : antsCopy) {
+            ant.moveTowardsTarget();
+        }
+    }
+}
