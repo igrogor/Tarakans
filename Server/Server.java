@@ -8,8 +8,7 @@ public class Server {
 
 
 static ArrayList<HostInf> SList = new ArrayList<>();
-
-    public static void main(String[] args) {
+public Server() {
         try {
             System.out.println("Я все еще тут!");
             int idHost = 1;
@@ -29,5 +28,5 @@ static ArrayList<HostInf> SList = new ArrayList<>();
 
         }
     }
-
 }
+
